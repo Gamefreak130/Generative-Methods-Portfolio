@@ -1,0 +1,96 @@
+body {
+    background-color: #A7C6D3;
+    text-align: center;
+    font-family: 'Roboto', Arial, sans-serif;
+}
+
+h1, h2 {
+    font-family: 'Sarabun', Helvetica, sans-serif;
+    padding-bottom: 5px;
+    margin-top: revert !important;
+}
+
+table {
+    border-color: gainsboro !important;
+}
+
+th {
+    text-align: center;
+}
+
+.container {
+    background-color: #ffffff;
+    width: 80%;
+    max-width: 1000px;
+    margin: auto;
+    margin-top: 10px;
+    padding: 10px 50px 0 50px;
+    border-radius: 10px;
+}
+
+.container div {
+    padding-top: 5px;
+    padding-bottom: 10px;
+}
+
+.glyph {
+    height: 24px;
+    width: 24px;
+    margin-bottom: 5px;
+}
+
+.separated {
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-bottom-color: gainsboro;
+}
+
+.btn-light {
+    border-color: #85B0C2 !important;
+}
+
+.btn-light, .btn-light:visited {
+    background-color: #A7C6D3 !important;
+    color: #212529 !important;
+}
+
+.btn-light:hover, .btn-light:active {
+    background-color: #C9DCE4 !important;
+}
+
+#mts {
+    width: 12px;
+}
+
+#socials {
+    font-size: 24px;
+    padding-top: 0;
+}
+
+#socials p {
+    margin-top: 5px;
+}
+
+#avatar {
+    border-radius: 100%;
+    display: block;
+    margin: auto;
+}
+
+#interactives {
+    padding-bottom: 30px;
+}
+
+#interactives button {
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+#attractions {
+    padding-bottom: 30px;
+}
+
+#attractions table {
+    margin: auto;
+    width: 60%;
+}
