@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
 	// Rename your drawing here if you want
 	let drawingTitles = ["Breathing Circles", 
-		"types of movement", 
+		"The Hex", 
 		"text and trails", 
 		"transformation matrixes",
 		"polar coordinates",
@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", function(){
 	// Ignore this section if you want
 	// This is me adding a label and a canvas-holder to each swatch
 	// For each drawing
-	for (var i = 0; i < 9; i++) {
+	for (var i = 0; i < 2; i++) {
 		let el = document.createElement("div")
 		el.className = "drawing"
 		el.id = "drawing" + i
@@ -45,12 +45,6 @@ document.addEventListener("DOMContentLoaded", function(){
 	setupDrawing0()
 	setupDrawing1()
 	setupDrawing2()
-	// setupDrawing3()
-	// setupDrawing4()
-	// setupDrawing5()
-	// setupDrawing6()
-	// setupDrawing7()
-	// setupDrawing8()
 
 });
 
@@ -68,11 +62,8 @@ function setupDrawing0() {
 		// Set the color mode 
 		p.colorMode(p.HSL);
 
-		// Set the background to black 
-		p.background(0, 100, 100);
-
 		maxDiameter = p.width;
-	}
+	};
 
 	let draw = p => {
 		p.background(0, 100, 100, 0.009);
@@ -91,17 +82,41 @@ function setupDrawing0() {
 		p.circle(0, 0, diameter);
 	};
 
-	let element = getP5Element(0) // My function to get the element for this index
+	let element = getP5Element(0); // My function to get the element for this index
 	new p5(function(p) {
-		p.setup = () => setup(p)
-		p.draw = () => draw(p)
+		p.setup = () => setup(p);
+		p.draw = () => draw(p);
 	}, element);
 }
 
 function setupDrawing1() {
-	let element = getP5Element(1) // My function to get the element for this index
+	let setup = p => {
+		p.colorMode(p.HSL);
+		p.createCanvas(WIDTH, HEIGHT, p.WEBGL);
+		p.setAttributes('antialias', true);
+	};
+
+	let draw = p => {
+		let t = p.millis();
+		let lightMag = (Math.sin(t*0.001)*0.25)+0.5;
+		p.background(0, 0, 0, lightMag);
+		p.rotateX(t*0.001);
+		p.rotateY(t*0.0015);
+		p.fill(50, 100, 50);
+		p.shininess(1);
+		p.ambientLight(128, 128, 128);
+		p.directionalLight(128, 128, 128, 25, 25, -25);
+		p.specularMaterial(50, 100, 50);
+		p.noStroke();
+		p.torus(100, 10, 6, 24);
+		p.specularMaterial(79);
+		p.shininess(1);
+		p.sphere(50, 10, 10);
+	};
+
+	let element = getP5Element(1); // My function to get the element for this index
 	new p5(function(p) {
-		p.setup = () => setup(p)
-		p.draw = () => draw(p)
+		p.setup = () => setup(p);
+		p.draw = () => draw(p);
 	}, element);
 }
