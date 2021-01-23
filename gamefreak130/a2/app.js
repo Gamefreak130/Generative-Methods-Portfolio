@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function(){
 	// Rename your drawing here if you want
 	let drawingTitles = ["Breathing Circles", 
 		"The Hex", 
-		"##TOKEN-NOT-FOUND##"
+		"##TOKEN_NOT_FOUND##"
 		]
 	let mainElement = document.getElementById("main")
 		
@@ -51,26 +51,32 @@ function setupDrawing0() {
 	let setup = p => {
 		// Create the canvas in the right dimension
 		p.createCanvas(WIDTH, HEIGHT);
-
 		// Set the color mode 
 		p.colorMode(p.HSL);
-
+		// The diameter to expand out to starts as the canvas width
 		maxDiameter = p.width;
 	};
 
 	let draw = p => {
+		// Super low opacity means really long trails
 		p.background(0, 100, 100, 0.009);
+
 		let t = p.millis();
+		// Diameter expands and contracts according to absolute value sine wave,
+		// Giving an interesting breathing effect
 		let diameter = Math.abs(Math.sin(t*0.0005))*maxDiameter;
-		if (diameter <= 10) {
+		// Randomize the circle color and the next diameter to expand out to 
+		// Once it stops contracting and starts expanding
+		if (diameter < 10) {
 			let h = p.random(360);
 			let s = p.random(30, 50);
 			let b = p.random(50, 70);
 			p.fill(h,s,b, 0.5);
 			p.strokeWeight(2);
 			p.stroke(h, s-20, b+20);
-			maxDiameter = p.random()*p.width;
+			maxDiameter = Math.random()*p.width;
 		}
+		// Circle is always drawn in the center of the canvas
 		p.translate(p.width/2, p.height/2);
 		p.circle(0, 0, diameter);
 	};
@@ -85,23 +91,36 @@ function setupDrawing0() {
 function setupDrawing1() {
 	let setup = p => {
 		p.colorMode(p.HSL);
+		// WebGL required for drawing 3D graphics
 		p.createCanvas(WIDTH, HEIGHT, p.WEBGL);
+		// Get rid of jaggies
 		p.setAttributes('antialias', true);
 	};
 
 	let draw = p => {
 		let t = p.millis();
+		// Lightness of the background is calculated according to a sine wave
 		let lightMag = (Math.sin(t*0.001)*0.25)+0.5;
 		p.background(0, 0, 0, lightMag);
+		// 3D object position seems to be static, no matter when it's drawn
+		// So we rotate the camera around it instead
 		p.rotateX(t*0.001);
 		p.rotateY(t*0.0015);
+		// Make hex gold
 		p.fill(50, 100, 50);
-		p.shininess(1);
+		// Allow the hex to be shiny and reflective
+		// By setting the shininess and allowing the specular material to reflect gold
+		p.shininess(5);
+		p.specularMaterial(50, 100, 50);
+		// Shine light on hex from a specific position
+		// Allowing for neat reflection things
 		p.ambientLight(128, 128, 128);
 		p.directionalLight(128, 128, 128, 25, 25, -25);
-		p.specularMaterial(50, 100, 50);
+		// Disable stroke so that wireframes are not drawn around the objects
 		p.noStroke();
+		// A torus with 6 x-axis vertices creates the basic hexagon shape
 		p.torus(100, 10, 6, 24);
+		// The sphere is reflective, but only in grayscale and not as much as the hex
 		p.specularMaterial(79);
 		p.shininess(1);
 		p.sphere(50, 10, 10);
@@ -115,8 +134,11 @@ function setupDrawing1() {
 }
 
 function setupDrawing2() {
-	const matrixCharacters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()?ΕΡΤΥΘΙΟΠΑΣΔΦΓΗΞΚΛΖΧΨΩΒΝΜςερτυθιοπασδφγηξκλζχψωβνμアイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワウィいうえくけこさしたちつてとにのひんンれろわよらり';
+	// Latin and Greek characters, katakana, and some hiragana are valid for the matrix code
+	const matrixCharacters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzΕΡΤΥΘΙΟΠΑΣΔΦΓΗΞΚΛΖΧΨΩΒΝΜςερτυθιοπασδφγηξκλζχψωβνμアイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワウィいうえくけこさしたちつてとにのひんンれろわよらり';
 
+	// Each cascading line has exactly one "head" which starts at a random height on the canvas
+	// The initial head offset of each line is stored in this array
 	let offsets = new Array(15);
 		for (var i = 0; i < offsets.length; i++) {
 			offsets[i] = Math.floor(Math.random()*HEIGHT);
@@ -129,16 +151,21 @@ function setupDrawing2() {
 	};
 
 	let draw = p => {
+		// Only draw new characters and fade out existing ones every five frames
+		// This keeps animation pretty smooth while also avoiding drawing characters too fast or too close together
 		if (p.frameCount % 5 == 0) {
-			p.background(0, 0, 0, 0.1);
+			p.background(0, 0, 0, 0.11);
+			// Draw each cascading line
 			for (var i = 0; i < offsets.length; i++) {
 				let t = p.millis();
+				// Get a random character from the valid code characters
 				let randomChar = matrixCharacters.charAt(Math.floor(p.random(0, matrixCharacters.length)));
 				let pct = i/offsets.length;
 				let y = (offsets[i] + (t*0.3)) % HEIGHT;
+				// Make the lines equally spaced apart (plus some offset to keep them centered in the canvas)
 				let x = (pct*WIDTH) + 12;
-				p.strokeWeight(3);
-				p.stroke(150, 80, 70, .25); // Oh, this looks nice if I reduce the alpha
+				p.strokeWeight(2);
+				p.stroke(150, 80, 100, .25); // When the alpha is reduced, this stroke creates a cool "glowing" effect
 				p.fill(150, 100, 50);
 				p.textFont('Trebuchet MS');
 				p.text(randomChar, x, y);
