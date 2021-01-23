@@ -8,20 +8,13 @@ document.addEventListener("DOMContentLoaded", function(){
 	// Rename your drawing here if you want
 	let drawingTitles = ["Breathing Circles", 
 		"The Hex", 
-		"text and trails", 
-		"transformation matrixes",
-		"polar coordinates",
-		"looping noise",
-		"shapes",
-		"using functions",
-		"SVGs and masking"
+		"##TOKEN-NOT-FOUND##"
 		]
 	let mainElement = document.getElementById("main")
 		
-	// Ignore this section if you want
 	// This is me adding a label and a canvas-holder to each swatch
 	// For each drawing
-	for (var i = 0; i < 2; i++) {
+	for (var i = 0; i < 3; i++) {
 		let el = document.createElement("div")
 		el.className = "drawing"
 		el.id = "drawing" + i
@@ -83,7 +76,7 @@ function setupDrawing0() {
 	};
 
 	let element = getP5Element(0); // My function to get the element for this index
-	new p5(function(p) {
+	new p5(p => {
 		p.setup = () => setup(p);
 		p.draw = () => draw(p);
 	}, element);
@@ -114,8 +107,47 @@ function setupDrawing1() {
 		p.sphere(50, 10, 10);
 	};
 
-	let element = getP5Element(1); // My function to get the element for this index
-	new p5(function(p) {
+	let element = getP5Element(1);
+	new p5(p => {
+		p.setup = () => setup(p);
+		p.draw = () => draw(p);
+	}, element);
+}
+
+function setupDrawing2() {
+	const matrixCharacters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()?ΕΡΤΥΘΙΟΠΑΣΔΦΓΗΞΚΛΖΧΨΩΒΝΜςερτυθιοπασδφγηξκλζχψωβνμアイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワウィいうえくけこさしたちつてとにのひんンれろわよらり';
+
+	let offsets = new Array(15);
+		for (var i = 0; i < offsets.length; i++) {
+			offsets[i] = Math.floor(Math.random()*HEIGHT);
+		}
+
+	let setup = p => {
+		p.createCanvas(WIDTH, HEIGHT);
+		p.colorMode(p.HSL);
+		p.background(0, 0, 0);
+	};
+
+	let draw = p => {
+		if (p.frameCount % 5 == 0) {
+			p.background(0, 0, 0, 0.1);
+			for (var i = 0; i < offsets.length; i++) {
+				let t = p.millis();
+				let randomChar = matrixCharacters.charAt(Math.floor(p.random(0, matrixCharacters.length)));
+				let pct = i/offsets.length;
+				let y = (offsets[i] + (t*0.3)) % HEIGHT;
+				let x = (pct*WIDTH) + 12;
+				p.strokeWeight(3);
+				p.stroke(150, 80, 70, .25); // Oh, this looks nice if I reduce the alpha
+				p.fill(150, 100, 50);
+				p.textFont('Trebuchet MS');
+				p.text(randomChar, x, y);
+			}
+		}
+	};
+
+	let element = getP5Element(2);
+	new p5(p => {
 		p.setup = () => setup(p);
 		p.draw = () => draw(p);
 	}, element);
