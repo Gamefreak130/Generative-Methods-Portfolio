@@ -145,7 +145,7 @@ function setupDrawing2() {
 
 	// Each cascading line has exactly one "head" which starts at a random height on the canvas
 	// The initial head offset of each line is stored in this array
-	let offsets = new Array(15);
+	let offsets = new Array(25);
 		for (var i = 0; i < offsets.length; i++) {
 			offsets[i] = Math.floor(Math.random()*HEIGHT);
 		}
@@ -160,7 +160,7 @@ function setupDrawing2() {
 		// Only draw new characters and fade out existing ones every five frames
 		// This keeps animation pretty smooth while also avoiding drawing characters too fast or too close together
 		if (p.frameCount % 5 == 0) {
-			p.background(0, 0, 0, 0.11);
+			p.background(0, 0, 0, 0.1);
 			// Draw each cascading line
 			for (var i = 0; i < offsets.length; i++) {
 				let t = p.millis();
@@ -169,7 +169,7 @@ function setupDrawing2() {
 				let pct = i/offsets.length;
 				let y = (offsets[i] + (t*0.3)) % HEIGHT;
 				// Make the lines equally spaced apart (plus some offset to keep them centered in the canvas)
-				let x = (pct*WIDTH) + 12;
+				let x = (pct*WIDTH) + 5;
 				p.strokeWeight(2);
 				p.stroke(150, 80, 100, .25); // When the alpha is reduced, this stroke creates a cool "glowing" effect
 				p.fill(150, 100, 50);
