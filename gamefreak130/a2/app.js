@@ -46,7 +46,15 @@ function getP5Element(index) {
 }
 
 function setupDrawing0() {
-	let maxDiameter;
+	let maxDiameter, hsl;
+
+	let randomColor = () => {
+		return [
+			Math.random()*360,
+			(Math.random()*20) + 30,
+			(Math.random()*20) + 50
+		]
+	};
 
 	let setup = p => {
 		// Create the canvas in the right dimension
@@ -55,27 +63,25 @@ function setupDrawing0() {
 		p.colorMode(p.HSL);
 		// The diameter to expand out to starts as the canvas width
 		maxDiameter = p.width;
+		// Set the color immediately on setup to avoid a blank circle of glitchiness
+		hsl = randomColor();
 	};
 
 	let draw = p => {
 		// Super low opacity means really long trails
 		p.background(0, 100, 100, 0.009);
-
-		let t = p.millis();
 		// Diameter expands and contracts according to absolute value sine wave,
 		// Giving an interesting breathing effect
-		let diameter = Math.abs(Math.sin(t*0.0005))*maxDiameter;
+		let diameter = Math.abs(Math.sin(p.frameCount*0.0021*Math.PI))*maxDiameter;
 		// Randomize the circle color and the next diameter to expand out to 
 		// Once it stops contracting and starts expanding
-		if (diameter < 10) {
-			let h = p.random(360);
-			let s = p.random(30, 50);
-			let b = p.random(50, 70);
-			p.fill(h,s,b, 0.5);
-			p.strokeWeight(2);
-			p.stroke(h, s-20, b+20);
+		if (diameter <= 1) {
+			hsl = randomColor();
 			maxDiameter = Math.random()*p.width;
 		}
+		p.fill(hsl[0],hsl[1],hsl[2], 0.5);
+		p.strokeWeight(2);
+		p.stroke(hsl[0], hsl[1]-20, hsl[2]+20);
 		// Circle is always drawn in the center of the canvas
 		p.translate(p.width/2, p.height/2);
 		p.circle(0, 0, diameter);
