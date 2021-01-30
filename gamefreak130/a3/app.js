@@ -1,30 +1,26 @@
 // Outermost scope, 
 // You can access these variables from *anywhere*, in fxns, or in html
-let myP5 = undefined
-let mode = "mountains"
+let myP5;
+// modeFun corresponds to a function called by the processing object to draw the tool effect
 let modeFun = pencil;
 let mousePositions = []
 let pencilColor;
 let electricityColor;
 let DEBUG = false;
 
-function clearCanvas() {
-	myP5.background("white");
-}
-
-function rainbowClearCanvas() {
-	myP5.background(Math.random()*360, 80, 80);
-}
-
 function changeCursor(text) {
 	console.log(`Changing cursor to ${text}`);
 	document.body.style.cursor = `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="50" height="32" style="font-size: 20px;"><text x="-1" y="18">${text}</text></svg>'), auto`;
 }
 
+// Just your standard mouse draw
+// With selectable colors and splines to smooth out curves
 function pencil() {
 	drawCurve(pencilColor.color());	
 }
 
+// Repeatedly places filled circles, cycling through hue based on mouse position
+// Any two circles placed in the same position will have (approximately) the same hue
 function rainbow() {
 	if (mousePositions.length > 0) {
 		console.log("Rainbowing...");
@@ -34,6 +30,9 @@ function rainbow() {
 	}
 }
 
+// Totally clearing the canvas with one click is boring
+// The ghost makes increases the transparency of everything in the canvas while the mouse is clicked in the canvas
+// But will not totally erase anything; there will still be a faint grey outline no matter what
 function ghost() {
 	if (myP5.mouseX >= 0 && myP5.mouseY >= 0) {
 		console.log("Ghosting...");
@@ -41,6 +40,8 @@ function ghost() {
 	}
 }
 
+// Takes a big ol' square around the current mouse position
+// And inverts the color of all the pixels in it
 function negative() {
 	if (myP5.mouseX >= 0 && myP5.mouseY >= 0) {
 		console.log("Negativeing...");
@@ -48,9 +49,9 @@ function negative() {
 		myP5.loadPixels();
 		for (x = myP5.mouseX - radius; x <= myP5.mouseX + radius; x++) {
 			for (y = myP5.mouseY - radius; y <= myP5.mouseY + radius; y++) {
-				// p.set() if fine performance-wise, but p.get() is WAY too slow for this many pixels
-				// So we have to access the pixel buffer directly to get the color
-				let off = (Math.floor(y) * myP5.width + Math.floor(x)) * 4;
+				// p.set() is fine performance-wise, but p.get() is WAY too slow for this many pixels
+				// So we have to access the pixel buffer directly to get an [R, G, B, A] array
+				let off = (Math.floor(y) * myP5.width + Math.floor(x)) * 4 * myP5.pixelDensity();
 				let c = [
 					myP5.pixels[off],
 					myP5.pixels[off + 1],
@@ -68,19 +69,23 @@ function negative() {
 	}
 }
 
+// It's shocking!
 function electricity() {
 	if (!electricityColor || myP5.frameCount % 10 == 0) {
+		// The color of the curve you're drawing changes every 10 frames
 		electricityColor = myP5.color((myP5.millis()*30)%360, 100, 20+Math.random()*40, Math.random()*.4 + .3);
 	}
 
+	// We start with a simple mouse draw curve, just like the pencil
+	// Only with moar colorz
 	drawCurve(electricityColor);
 
 	let maxRecursion = 10;
 
 	let drawLine = (p0, timesRecursed) => {
-		let length = (10 + 30*Math.random())*2.5 / timesRecursed;
 		if (timesRecursed == maxRecursion) return;
-		let p1 = vector.getAddPolar(p0, length, 20*myP5.noise(...p0));
+		let length = (10 + 30*Math.random())*2.5 / timesRecursed;
+		let p1 = vector.getAddPolar(p0, length, 30*myP5.noise(...p0));
 
 		if (DEBUG) {
 			myP5.noStroke();
@@ -98,6 +103,9 @@ function electricity() {
 		drawLine(p1, timesRecursed + 1);
 	}
 
+	// Starting from the current mouse position,
+	// Draw a series of lines outward in a random direction from the end of the last line,
+	// With each line thinner and shorter than the last, up to a max of 10
 	if (myP5.frameCount % 10 == 0 && mousePositions.length > 0) {
 		drawLine(mousePositions[mousePositions.length - 1], 1);
 	}
@@ -105,10 +113,10 @@ function electricity() {
 
 
 document.addEventListener("DOMContentLoaded", function(){
+	// The default tool is pencil, so change the cursor accordingly
 	changeCursor('✏');
 	
 	// Add a processing instance
-
 
 	// Create the processing instance, and store it in myP5, 
 	// where we can access it anywhere in the code
@@ -121,11 +129,12 @@ document.addEventListener("DOMContentLoaded", function(){
 				console.log("Do setup", p);
 
 				p.createCanvas(768, 768);
-				p.colorMode(p.HSL);
-				p.pixelDensity(1);
-				
 				// Hue, Sat, Light
 				// (0-360,0-100,0-100)
+				p.colorMode(p.HSL);
+				
+				// The default tool is pencil, and its default color is black
+				// This adds a color picker button below the canvas so the user can change the pencil color later
 				pencilColor = p.createColorPicker('black');
 				pencilColor.position((myP5.width / 2) + 75, myP5.height + 27);
 				p.background('white');
@@ -133,94 +142,31 @@ document.addEventListener("DOMContentLoaded", function(){
 			}
 
 			p.mousePressed = () => {
+				// Negative is like a stamp tool, run exactly once every time the mouse is clicked
 				if (modeFun == negative) {
 					modeFun();
 				}
 			}
 
 			p.mouseDragged = () => {
+
 				// Save this current mouse position in an array
-				// .... but what will you do with an array of vectors?
 				mousePositions.push([p.mouseX, p.mouseY]);
 
+				// Negative and ghost run in places other than mouseDragged()
 				if (modeFun != negative && modeFun != ghost) {
 					modeFun();
 				}
-
-				/*switch(mode) {
-					case "garland":
-						let speed = Math.sqrt(p.movedX*p.movedX + p.movedY*p.movedY)
-
-						let allEmoji = ["🌸","🌷","🌹","🌼","🌺","✨","💖"]
-						let emojiIndex = Math.floor(Math.random()*allEmoji.length)
-						let emoji = allEmoji[emojiIndex]
-						
-						// Draw the emoji at the mouse
-						p.textSize(2*speed + 6)
-
-						// Try out some blend modes
-						// p.blendMode(p.MULTIPLY);
-						// p.blendMode(p.OVERLAY);
-						// p.blendMode(p.SCREEN);
-						// p.blendMode(p.DIFFERENCE);
-
-						p.text(emoji, p.mouseX + Math.random()*speed, p.mouseY + Math.random()*speed)
-						// Turn back to normal
-						p.blendMode(p.BLEND);
-						break;
-
-					case "smudge":
-						// Draw scattered circles
-						p.noStroke()
-						p.fill((Math.random()*30 + t*40)%360, 100, 50 + Math.random()*30)
-						p.circle(p.mouseX + Math.random()*10, p.mouseY + Math.random()*10, 3 + Math.random())
-					
-						break;
-
-					case "thread":
-						
-						// The current vector
-						let p0 = [p.mouseX, p.mouseY]
-
-						let hairCycle = t*1
-							
-						for (var i = 0; i < 10; i++) {
-							let hairLength = 10 + 30*Math.random()
-							let cp0 = vector.getAddPolar(p0, hairLength, 20*p.noise(hairCycle))
-							let cp1 = vector.getAddPolar(cp0, hairLength, 20*p.noise(hairCycle + 10))
-							let p1 = vector.getAddPolar(cp1, hairLength, 20*p.noise(hairCycle + 20))
-						
-
-							// p.noStroke()
-							// p.fill(0)
-							// p.circle(...p0, 5)
-							// p.circle(...p1, 5)
-							// p.fill(150, 100, 40)
-							// p.circle(...cp0, 3)
-							// p.circle(...cp1, 3)
-							// console.log(p0, cp0, cp1, p1)
-
-							p.noFill()
-							p.strokeWeight(1 + Math.random())
-							// Randomness in the strokes for variety
-							p.stroke((t*30)%360, 100, 20+Math.random()*40, Math.random()*.4 + .3)
-							p.bezier(...p0, ...cp0, ...cp1, ...p1)
-						}
-						break;
-
-					case "mountains":
-						drawBeziers(p, mousePositions)
-						break;
-				
-					default: 
-						console.warn("UNKNOWN TOOL");
-				}*/
 				
 			}
 
+			// Clear the mouse positions when the mouse is released
+			// So the user can draw multiple curves without seeing weird glitches
 			p.mouseReleased = () => mousePositions = [];
 
 			p.draw = () => {
+				// The ghost function runs in draw() and not mouseDragged()
+				// Because mouseDragged() will not capture a clicked mouse that is not moving, but this will
 				if (modeFun == ghost && p.mouseIsPressed) {
 					modeFun();
 				}
@@ -239,94 +185,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
 		// A place to put the canvas
 		element);
-})
-
-
-// Use the Pixel buffer to "smudge" pixels by 
-// linearly interpolating their colors with some other color
-function smearPixels(p) {
-	// Smear the pixels down from here
-	// console.log("smudge2")
-	p.loadPixels();
-
-	// Get the current mouse position
-	let x = Math.floor(p.mouseX)
-	let y = Math.floor(p.mouseY)
-
-	for (var i = 0; i < 10; i++) {
-		let x2 = x + i
-		
-		let lastColor = p.get(x2, y)
-
-
-		let dripDistance = Math.random()* Math.random()*150
-		for (var j = 0; j < dripDistance; j++) {
-			let dripPct = j/dripDistance
-
-			let y2 = y + j
-
-			// Get the current color and blend it with the last color
-			let pixelColor = p.get(x2, y2)
-			let finalColor = vector.lerp(pixelColor, lastColor, 1 - dripPct)
-			
-			if (x2 > 0 && x2 < p.width && y2 > 0 && y2 < p.height)
-				p.set(x2, y2, finalColor)
-			
-			// Save this color to blend with later pixels
-			lastColor = finalColor
-
-		}
-	}
-	p.updatePixels();
-}
-
-// Using a lot of mouse positions to do... something
-function drawBeziers(p, mousePositions) {
-	// Draw some vectors
-	
-	// Get every 7th point in the array
-	let everyOther = mousePositions.filter((element, index) => {
-		return (mousePositions.length - index) % 7 === 0;
-	})
-
-	// Take the last N positions
-	let count = 2
-	let pts = everyOther.slice(everyOther.length - count)
-
-	// Now we have 5 points, sampled every 7th point, starting at the end
-	// So we can draw "backward" from the end
-
-	if (pts.length > 0) {
-		p.stroke(0)
-		p.fill(Math.random()*360, 100, 50, .2)
-
-		p.beginShape()
-		p.vertex(...pts[0])
-		
-		// Draw each segment of a bezier curve 
-		// (start at index=1!)
-		for (var i = 1; i < pts.length; i++) {
-			// For this segment, we draw between 2 pts
-			let pt0 = pts[i - 1]
-			let pt1 = pts[i]
-			let d = vector.getSub(pt1, pt0)
-			let mag = vector.magnitude(d)
-			let n = [-d[1], d[0]]
-
-			let cp0 = pt0.slice(0)
-			let cp1 = pt1.slice(0)
-			cp0[1] -= mag
-			cp1[1] -= mag
-			
-			// vector.addTo(cp1, n)
-
-
-			p.bezierVertex(...cp0, ...cp1, ...pt1)
-		}
-
-		p.endShape()
-	}
-}
+});
 
 function drawCurve(color) {
 	if (mousePositions.length > 1) {
