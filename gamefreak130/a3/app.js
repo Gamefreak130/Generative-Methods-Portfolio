@@ -23,12 +23,13 @@ function pencil() {
 	//TODO select color?
 	if (mousePositions.length > 0) {
 		console.log("Penciling...");
-		myP5.stroke('black');
-		/* if (DEBUG) {
-			myP5.strokeWeight(5);
+		 if (DEBUG) {
+			myP5.strokeWeight(10);
+			myP5.stroke('red');
 			mousePositions.filter((_, i) => i % 4 == 0).forEach(point => myP5.point(...point));
-		} */
+		} 
 		myP5.strokeWeight(2);
+		myP5.stroke('black');
 		myP5.noFill();
 		myP5.beginShape();
 		mousePositions.filter((_, i) => i % 4 == 0).forEach(point => myP5.curveVertex(...point));
@@ -40,7 +41,7 @@ function rainbow() {
 	if (mousePositions.length > 0) {
 		console.log("Rainbowing...");
 		myP5.stroke((myP5.mouseX + myP5.mouseY)%360, 90, 60);
-		myP5.strokeWeight(20);
+		myP5.strokeWeight(50);
 		myP5.point(...mousePositions[mousePositions.length - 1]);
 	}
 }
@@ -60,6 +61,8 @@ function negative() {
 		myP5.loadPixels();
 		for (x = myP5.mouseX - radius; x <= myP5.mouseX + radius; x++) {
 			for (y = myP5.mouseY - radius; y <= myP5.mouseY + radius; y++) {
+				// p.set() if fine performance-wise, but p.get() is WAY too slow for this many pixels
+				// So we have to access the pixel buffer directly to get the color
 				let off = (Math.floor(y) * myP5.width + Math.floor(x)) * 4;
 				let c = [
 					myP5.pixels[off],
@@ -75,6 +78,41 @@ function negative() {
 		}
 		myP5.updatePixels();
 		console.log("Done");
+	}
+}
+
+function electricity() {
+	pencil();
+
+	let maxRecursion = 10;
+
+	let drawLine = (p0, timesRecursed) => {
+		//let hairCycle = myP5.millis();
+		let hairLength = (10 + 30*Math.random())*2.5 / timesRecursed;
+		if (timesRecursed == maxRecursion) return;
+		//let cp0 = vector.getAddPolar(p0, hairLength, 20*myP5.noise(hairCycle));
+		//let cp1 = vector.getAddPolar(cp0, hairLength, 20*myP5.noise(hairCycle + 10));
+		let p1 = vector.getAddPolar(p0, hairLength, 20*myP5.noise(...p0));
+
+		if (DEBUG) {
+			myP5.noStroke();
+			myP5.fill(150, 100, 40);
+			myP5.circle(...p0, 5);
+			myP5.circle(...p1, 5);
+			console.log(p0, p1);
+		}
+
+		myP5.noFill();
+		myP5.strokeWeight(5 - (timesRecursed/2));
+		// Randomness in the strokes for variety
+		myP5.stroke((myP5.millis()*30)%360, 100, 20+Math.random()*40, Math.random()*.4 + .3);
+		myP5.line(...p0, ...p1);
+		//myP5.bezier(...p0, ...cp0, ...cp1, ...p1);
+		drawLine(p1, timesRecursed + 1);
+	}
+
+	if (myP5.frameCount % 10 == 0 && mousePositions.length > 0) {
+		drawLine(mousePositions[mousePositions.length - 1], 1);
 	}
 }
 
