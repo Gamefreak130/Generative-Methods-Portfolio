@@ -1,0 +1,70 @@
+
+body,html {
+	position: relative;
+	width: 100%;
+}
+
+body {
+  background-color: hsla(190, 20%, 70%, 1);
+}
+
+h1,h2,h3 {
+	font-family: 'Gorditas', cursive;
+}
+
+
+/* Set the size of the containers */
+.drawing {
+	box-sizing: border-box;
+	margin: 10px;
+	vertical-align: top;
+	background-color: white;
+	
+	display: inline-block;
+	
+	box-shadow: 1px 2px 5px black;
+	border-radius: 10px;
+}
+
+.drawing-label {
+	font-family: monospace;
+	font-weight: bold;
+	margin: 10px;
+	text-align: center;
+}
+
+/* Set the size of the containers */
+.drawing-p5holder {
+	box-sizing: border-box;
+	margin: 10px;
+}
+
+.btn.active {
+	background-color: black;
+}
+
+
+canvas {
+	width: 768px;
+	height: 768px;
+	border: 10px solid rgba(0, 0, 0, 0);
+	box-shadow: 0px 4px 5px rgba(0, 0, 0, .5);
+}
+
+#main-column {
+	border-radius: 40px;
+	background-color: white;
+	box-shadow: 0px 4px 5px rgba(0, 0, 0, .5);
+	width: 900px;
+	height: 810px;
+	display: block;
+	position: relative;
+	text-align: center;
+	margin: 10px auto;
+	padding: 20px 40px 0 0;
+}
+
+#main {
+	display: inline-flex;
+	vertical-align: middle;
+}

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html>
+<head>
+
+	<title>Drawing Tool</title>
+
+	<!-- Load Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+
+	<link rel="stylesheet" href="page.css">
+
+	<!-- P5 Loaded from a CDN -->
+	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.2.0/p5.min.js"></script> -->
+
+	<!-- Or P5 loaded locally -->
+	<script src="../../shared/p5.min.js"></script>
+	
+	<script src="vector.js"></script>
+
+	<!-- My app's code goes last, 
+		because it needs to refer to things in the previous two JS files -->
+	<script src="app.js"></script>
+
+</head>
+<body>
+	<div id="main-column">
+		<span class="btn-group-vertical" role="group" aria-label="Drawing Tools">
+			<input type="radio" class="btn-check" name="options" id="ghost" onclick="modeFun=ghost; changeCursor('👻');" autocomplete="off">
+			<label class="btn btn-outline-secondary" for="ghost" title="Ghost">👻</label>
+
+			<input type="radio" class="btn-check" name="options" id="pencil" onclick="modeFun=pencil; changeCursor('✏');" autocomplete="off" checked>
+			<label class="btn btn-outline-secondary" for="pencil" title="Pencil">✏</label>
+
+			<input type="radio" class="btn-check" name="options" id="negative" onclick="modeFun=negative; changeCursor('👥');" autocomplete="off">
+			<label class="btn btn-outline-secondary" for="negative" title="Negative">👥</label>
+
+			<input type="radio" class="btn-check" name="options" id="squiggles" onclick="modeFun=squiggles; changeCursor('⚡');" autocomplete="off">
+			<label class="btn btn-outline-secondary" for="squiggles" title="Squiggles">⚡</label>
+
+			<input type="radio" class="btn-check" name="options" id="rainbow" onclick="modeFun=rainbow; changeCursor('🌈');" autocomplete="off">
+			<label class="btn btn-outline-secondary" for="rainbow" title="Rainbow">🌈</label>
+		</span>
+
+		<span id="main"></span>
+	</div>
+
+</body>
+</html>
