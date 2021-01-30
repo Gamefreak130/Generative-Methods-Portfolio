@@ -4,6 +4,8 @@ let myP5 = undefined
 let mode = "mountains"
 let modeFun = pencil;
 let mousePositions = []
+let pencilColor;
+let electricityColor;
 let DEBUG = false;
 
 function clearCanvas() {
@@ -20,21 +22,7 @@ function changeCursor(text) {
 }
 
 function pencil() {
-	//TODO select color?
-	if (mousePositions.length > 0) {
-		console.log("Penciling...");
-		 if (DEBUG) {
-			myP5.strokeWeight(10);
-			myP5.stroke('red');
-			mousePositions.filter((_, i) => i % 4 == 0).forEach(point => myP5.point(...point));
-		} 
-		myP5.strokeWeight(2);
-		myP5.stroke('black');
-		myP5.noFill();
-		myP5.beginShape();
-		mousePositions.filter((_, i) => i % 4 == 0).forEach(point => myP5.curveVertex(...point));
-		myP5.endShape();
-	}
+	drawCurve(pencilColor.color());	
 }
 
 function rainbow() {
@@ -47,10 +35,9 @@ function rainbow() {
 }
 
 function ghost() {
-	//TODO fade out, rather than immediate clear
 	if (myP5.mouseX >= 0 && myP5.mouseY >= 0) {
 		console.log("Ghosting...");
-		clearCanvas();
+		myP5.background(0, 100, 100, 0.1);
 	}
 }
 
@@ -82,17 +69,18 @@ function negative() {
 }
 
 function electricity() {
-	pencil();
+	if (!electricityColor || myP5.frameCount % 10 == 0) {
+		electricityColor = myP5.color((myP5.millis()*30)%360, 100, 20+Math.random()*40, Math.random()*.4 + .3);
+	}
+
+	drawCurve(electricityColor);
 
 	let maxRecursion = 10;
 
 	let drawLine = (p0, timesRecursed) => {
-		//let hairCycle = myP5.millis();
-		let hairLength = (10 + 30*Math.random())*2.5 / timesRecursed;
+		let length = (10 + 30*Math.random())*2.5 / timesRecursed;
 		if (timesRecursed == maxRecursion) return;
-		//let cp0 = vector.getAddPolar(p0, hairLength, 20*myP5.noise(hairCycle));
-		//let cp1 = vector.getAddPolar(cp0, hairLength, 20*myP5.noise(hairCycle + 10));
-		let p1 = vector.getAddPolar(p0, hairLength, 20*myP5.noise(...p0));
+		let p1 = vector.getAddPolar(p0, length, 20*myP5.noise(...p0));
 
 		if (DEBUG) {
 			myP5.noStroke();
@@ -107,7 +95,6 @@ function electricity() {
 		// Randomness in the strokes for variety
 		myP5.stroke((myP5.millis()*30)%360, 100, 20+Math.random()*40, Math.random()*.4 + .3);
 		myP5.line(...p0, ...p1);
-		//myP5.bezier(...p0, ...cp0, ...cp1, ...p1);
 		drawLine(p1, timesRecursed + 1);
 	}
 
@@ -139,13 +126,14 @@ document.addEventListener("DOMContentLoaded", function(){
 				
 				// Hue, Sat, Light
 				// (0-360,0-100,0-100)
-				p.background("white")
-
+				pencilColor = p.createColorPicker('black');
+				pencilColor.position((myP5.width / 2) + 75, myP5.height + 27);
+				p.background('white');
 
 			}
 
 			p.mousePressed = () => {
-				if (modeFun == ghost || modeFun == negative) {
+				if (modeFun == negative) {
 					modeFun();
 				}
 			}
@@ -155,7 +143,7 @@ document.addEventListener("DOMContentLoaded", function(){
 				// .... but what will you do with an array of vectors?
 				mousePositions.push([p.mouseX, p.mouseY]);
 
-				if (modeFun != negative) {
+				if (modeFun != negative && modeFun != ghost) {
 					modeFun();
 				}
 
@@ -233,8 +221,9 @@ document.addEventListener("DOMContentLoaded", function(){
 			p.mouseReleased = () => mousePositions = [];
 
 			p.draw = () => {
-				// Not updating the background
-				let t = p.millis()*.001;
+				if (modeFun == ghost && p.mouseIsPressed) {
+					modeFun();
+				}
 
 				// Draw the text box to label the tool (OPTIONAL)
 				if (DEBUG) {
@@ -245,8 +234,6 @@ document.addEventListener("DOMContentLoaded", function(){
 					p.textSize(10)
 					p.text("TOOL " + modeFun.name, 5, 20)
 				}
-					
-					
 			}
 		}, 
 
@@ -338,5 +325,22 @@ function drawBeziers(p, mousePositions) {
 		}
 
 		p.endShape()
+	}
+}
+
+function drawCurve(color) {
+	if (mousePositions.length > 1) {
+		console.log("Penciling...");
+		 if (DEBUG) {
+			myP5.strokeWeight(10);
+			myP5.stroke('red');
+			mousePositions.filter((_, i) => i % 4 == 0).forEach(point => myP5.point(...point));
+		} 
+		myP5.strokeWeight(2);
+		myP5.stroke(color);
+		myP5.noFill();
+		myP5.beginShape();
+		mousePositions.filter((_, i) => i % 4 == 0).forEach(point => myP5.curveVertex(...point));
+		myP5.endShape();
 	}
 }

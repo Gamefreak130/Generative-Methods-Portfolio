@@ -27,23 +27,24 @@
 <body>
 	<div id="main-column">
 		<span class="btn-group-vertical" role="group" aria-label="Drawing Tools">
-			<input type="radio" class="btn-check" name="options" id="ghost" onclick="modeFun=ghost; changeCursor('👻');" autocomplete="off">
+			<input type="radio" class="btn-check" name="options" id="ghost" onclick="modeFun=ghost; pencilColor.hide(); document.getElementsByTagName('p')[0].style.visibility = 'hidden'; changeCursor('👻');" autocomplete="off">
 			<label class="btn btn-outline-secondary" for="ghost" title="Ghost">👻</label>
 
-			<input type="radio" class="btn-check" name="options" id="pencil" onclick="modeFun=pencil; changeCursor('✏');" autocomplete="off" checked>
+			<input type="radio" class="btn-check" name="options" id="pencil" onclick="modeFun=pencil; pencilColor.show(); document.getElementsByTagName('p')[0].style.visibility = 'visible'; changeCursor('✏');" autocomplete="off" checked>
 			<label class="btn btn-outline-secondary" for="pencil" title="Pencil">✏</label>
 
-			<input type="radio" class="btn-check" name="options" id="negative" onclick="modeFun=negative; changeCursor('👥');" autocomplete="off">
+			<input type="radio" class="btn-check" name="options" id="negative" onclick="modeFun=negative; pencilColor.hide(); document.getElementsByTagName('p')[0].style.visibility = 'hidden'; changeCursor('👥');" autocomplete="off">
 			<label class="btn btn-outline-secondary" for="negative" title="Negative">👥</label>
 
-			<input type="radio" class="btn-check" name="options" id="electricity" onclick="modeFun=electricity; changeCursor('⚡');" autocomplete="off">
+			<input type="radio" class="btn-check" name="options" id="electricity" onclick="modeFun=electricity; pencilColor.hide(); document.getElementsByTagName('p')[0].style.visibility = 'hidden'; changeCursor('⚡');" autocomplete="off">
 			<label class="btn btn-outline-secondary" for="electricity" title="electricity">⚡</label>
 
-			<input type="radio" class="btn-check" name="options" id="rainbow" onclick="modeFun=rainbow; changeCursor('🌈');" autocomplete="off">
+			<input type="radio" class="btn-check" name="options" id="rainbow" onclick="modeFun=rainbow; pencilColor.hide(); document.getElementsByTagName('p')[0].style.visibility = 'hidden'; changeCursor('🌈');" autocomplete="off">
 			<label class="btn btn-outline-secondary" for="rainbow" title="Rainbow">🌈</label>
 		</span>
 
 		<span id="main"></span>
+		<p>Pencil Color:</p>
 	</div>
 
 </body>
