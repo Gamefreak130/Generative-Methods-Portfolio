@@ -6,7 +6,7 @@ let modeFun = pencil;
 let mousePositions = []
 let pencilColor;
 let electricityColor;
-let DEBUG = false;
+const DEBUG = false;
 
 function changeCursor(text) {
 	console.log(`Changing cursor to ${text}`);
