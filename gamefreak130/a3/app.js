@@ -24,7 +24,7 @@ function clearCanvas() {
 function ghost() {
 	if (myP5.mouseX >= 0 && myP5.mouseY >= 0) {
 		console.log("Ghosting...");
-		myP5.background(0, 100, 100, 0.1);
+		myP5.background(0, 100, 100, 0.05);
 	}
 }
 
