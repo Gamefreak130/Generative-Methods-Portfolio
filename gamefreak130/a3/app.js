@@ -13,6 +13,21 @@ function changeCursor(text) {
 	document.body.style.cursor = `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="50" height="32" style="font-size: 20px;"><text x="-1" y="18">${text}</text></svg>'), auto`;
 }
 
+function clearCanvas() {
+	console.log("Clearing");
+	myP5.background("white");
+}
+
+// Totally clearing the canvas with one click is boring
+// The ghost makes increases the transparency of everything in the canvas while the mouse is clicked in the canvas
+// But will not totally erase anything; there will still be a faint grey outline no matter what
+function ghost() {
+	if (myP5.mouseX >= 0 && myP5.mouseY >= 0) {
+		console.log("Ghosting...");
+		myP5.background(0, 100, 100, 0.1);
+	}
+}
+
 // Just your standard mouse draw
 // With selectable colors and splines to smooth out curves
 function pencil() {
@@ -27,16 +42,6 @@ function rainbow() {
 		myP5.stroke((myP5.mouseX + myP5.mouseY)%360, 90, 60);
 		myP5.strokeWeight(50);
 		myP5.point(...mousePositions[mousePositions.length - 1]);
-	}
-}
-
-// Totally clearing the canvas with one click is boring
-// The ghost makes increases the transparency of everything in the canvas while the mouse is clicked in the canvas
-// But will not totally erase anything; there will still be a faint grey outline no matter what
-function ghost() {
-	if (myP5.mouseX >= 0 && myP5.mouseY >= 0) {
-		console.log("Ghosting...");
-		myP5.background(0, 100, 100, 0.1);
 	}
 }
 

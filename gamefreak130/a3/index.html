@@ -27,6 +27,8 @@
 <body>
 	<div id="main-column">
 		<span class="btn-group-vertical" role="group" aria-label="Drawing Tools">
+			<button class="btn btn-outline-secondary" onclick="clearCanvas()" title="New Canvas">📃</button>
+
 			<input type="radio" class="btn-check" name="options" id="ghost" onclick="modeFun=ghost; pencilColor.hide(); document.getElementsByTagName('p')[0].style.visibility = 'hidden'; changeCursor('👻');" autocomplete="off">
 			<label class="btn btn-outline-secondary" for="ghost" title="Ghost">👻</label>
 
