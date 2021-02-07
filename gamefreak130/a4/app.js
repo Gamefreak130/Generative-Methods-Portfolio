@@ -39,16 +39,18 @@ let simulationWidth = 600
 let simulationHeight = 360
 
 
-// an array of KatesParticles
-const katesParticleStartCount = 0
-let katesParticles = []
-
-
 // an object to hold boids
-const boidParticlesStartCount = 0
+const boidParticlesStartCount = 10
 let boidFlock = new BoidFlock()
 
-// Hold some snow ❄️
+let coffeeCups = []
+let coffeeCount = 5
+for (var i = 0; i < coffeeCount; i++) {
+	let pos = new Vector(Math.random()*simulationWidth, Math.random()*simulationHeight)
+	coffeeCups.push(pos)
+}
+
+// Hold some snow
 const snowParticleStartCount = 0
 let snowParticles = []
 
@@ -135,12 +137,19 @@ document.addEventListener("DOMContentLoaded", function(){
 				size: 1.2
 			}))
 
-			boidFlock.boids.forEach(boid => lightmap.drawBlurryLight({
-				pt: boid.position, 
-				channels: [255, 0, 0], 
+			coffeeCups.forEach(spot => lightmap.drawBlurryLight({
+				pt: spot, 
+				channels: [0, 255, 0], 
 				intensity: .4,
-				size: 1.2
+				size: 1.8
 			}))
+
+			// boidFlock.boids.forEach(boid => lightmap.drawBlurryLight({
+			// 	pt: boid.position, 
+			// 	channels: [255, 0, 0], 
+			// 	intensity: .4,
+			// 	size: 1.2
+			// }))
 			// boidFlock.boids.forEach(boid => lightmap.drawBlurryLight({
 			// 	pt: boid.position, 
 			// 	channels: [255, 0, 0], 
@@ -166,12 +175,6 @@ document.addEventListener("DOMContentLoaded", function(){
 				p.createCanvas(simulationWidth, simulationHeight);
 				p.colorMode(p.HSL);
 				p.background("white")
-
-
-				for (var i = 0; i < katesParticleStartCount; i++) {
-					let pt = new KateParticle()
-					katesParticles.push(pt)
-				}
 
 
 				for (var i = 0; i < snowParticleStartCount; i++) {
@@ -243,22 +246,10 @@ document.addEventListener("DOMContentLoaded", function(){
 
 				// UPDATE! 
 				if (!paused) {
-					katesParticles.forEach(pt => pt.update(t, dt))
 					bugs.forEach(b => b.update(t, dt))
 					boidFlock.update(t, dt)				
 					snowParticles.forEach(pt => pt.update(t, dt))		
 					rockets.forEach(pt => pt.update(t, dt))		
-				}
-					
-				// Draw KatesParticles
-				katesParticles.forEach(pt => pt.draw(p))
-				if (FLAGS.drawKatesDebug) 
-					katesParticles.forEach(pt => pt.drawDebug(p))
-				
-				// Draw boids
-				boidFlock.draw(p)
-				if (FLAGS.drawBoidDebug) {
-					boidFlock.debugDraw(p)
 				}
 
 				// Draw bugs
@@ -271,16 +262,29 @@ document.addEventListener("DOMContentLoaded", function(){
 
 				// Move the food around
 				bugFood.forEach((food, index) => {
-					food[0] = (3*simulationWidth*noise(t*.001, index))%simulationWidth
-					food[1] = (3*simulationHeight*noise(t*.001, index + 100))%simulationHeight
+					food[0] = (3*simulationWidth*noise(t*.025, index))%simulationWidth
+					food[1] = (3*simulationHeight*noise(t*.025, index + 100))%simulationHeight
+				})
+
+				coffeeCups.forEach((food, index) => {
+					food[0] = (3*simulationWidth*noise(t*.025, index))%simulationWidth
+					food[1] = (3*simulationHeight*noise(t*.025, index + 100))%simulationHeight
 				})
 
 				p.fill(130, 100, 50)
 				p.stroke(170, 100, 30)
 				bugFood.forEach(food => p.circle(...food, 10))
 				bugs.forEach(b => b.draw(p))
-				
 
+				p.textSize(15)
+				coffeeCups.forEach(food => p.text('☕', ...food))
+
+				// Draw boids
+				boidFlock.draw(p)
+				if (FLAGS.drawBoidDebug) {
+					boidFlock.debugDraw(p)
+				}
+				
 				// Draw snow things
 				snowParticles.forEach(pt => pt.draw(p))
 				if (FLAGS.drawSnowDebug) {

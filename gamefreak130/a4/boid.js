@@ -21,6 +21,8 @@ let Boid = class {
 		this.position = position
 		this.velocity = velocity
 
+		this.heldObject = ''
+
 
 		// What forces does this boid have?
 		// Have as many empty vectors as there are types of forces
@@ -31,6 +33,8 @@ let Boid = class {
 			alignment: new Vector(0, 0),
 			separation: new Vector(0, 0),
 			selfPropulsion: new Vector(0, 0),
+			hunger: new Vector(0, 0),
+			homework: new Vector(0, 0)
 		}
 
 
@@ -47,7 +51,7 @@ let Boid = class {
 		// This force pulls the boid toward the center of the flock
 		this.forces.cohesion
 			.setToDifference(this.position, this.flock.center)
-			.mult(-.07* SLIDERS.boidCohesion.value())
+			.mult(-.05* SLIDERS.boidCohesion.value())
 
 		// The addition of all forces relative to other boids
 		this.forces.separation.mult(0)
@@ -55,7 +59,7 @@ let Boid = class {
 			if (boid !== this) {
 				let offset = Vector.getDifference(this.position, boid.position)
 				let d = offset.magnitude
-				let range = 50
+				let range = 200
 				// How close am I to this boid?
 
 				if (d < range) {		
@@ -65,6 +69,19 @@ let Boid = class {
 				}
 			}
 		})
+
+		this.forces.hunger.mult(0)
+		coffeeCups.forEach(food => {
+			let vectorToFood = Vector.getDifference(this.position, food)
+			let hungerRange = this.heldObject === '☕' ? 200 : 400
+			if (vectorToFood.magnitude < hungerRange) {
+				let multiplier = this.heldObject === '☕' ? -100 : 100
+				let pushStrength = multiplier*(hungerRange - vectorToFood.magnitude)/hungerRange
+				vectorToFood.normalize().mult(pushStrength)
+				this.forces.hunger.add(vectorToFood)
+			}
+		})
+
 
 
 		// The boid gets a boost in the direction of the flocks average speed
@@ -124,24 +141,34 @@ let Boid = class {
 
 
 	draw(p) {
-		let flap = Math.sin(p.millis()*.007 + this.idNumber) 
-		let length = 10 	// How big is this boid?
-		let wingWidth = 5 + 1*flap	// How wide is this boid?
-	
 		// bookmark the matrix position before we move to draw this
 		p.push()
 		
 		p.translate(...this.position)
 		p.rotate(this.velocity.angle)
 
-		p.stroke(0)
-		p.fill("white")
-		p.beginShape()
-		p.vertex(0, 0)					// front of the boid
-		p.vertex(-length*(1.2 - .2*flap), wingWidth)	// Wingtip
-		p.vertex(-length, 0)				// back of the boid
-		p.vertex(-length*(1.2 - .2*flap), -wingWidth)
-		p.endShape(p.CLOSE)
+		p.fill((this.idNumber*20) % 360, 80, 80)
+		p.stroke((this.idNumber*20) % 360, 100, 10)
+		p.circle(0, 0, 20)
+		p.strokeWeight(1)
+		if (this.heldObject == '') {
+			p.line(0, -10, 7, -13)
+			p.line(0, 10, 7, 13)
+		}
+		else {
+			p.line(5, -10, 15, -5)
+			p.line(5, 10, 15, 5)
+			p.rotate(p.HALF_PI)
+			p.text(this.heldObject, -10, -15)
+		}
+
+		coffeeCups.some(food => {
+			if (Vector.getDifference(this.position, food).magnitude < 20) {
+				this.heldObject = '☕'
+				return true
+			}
+			return false
+		})
 
 		// return to the original drawing position
 		p.pop()
