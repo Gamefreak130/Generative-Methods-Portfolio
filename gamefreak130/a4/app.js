@@ -11,7 +11,8 @@ let SLIDERS = {
 let FLAGS = {
 	drawBusybodyDebug: false,
 	drawObjectDebug: false,
-	drawLazybonesDebug: false
+	drawLazybonesDebug: false,
+	showClock: false
 }
 
 
@@ -62,6 +63,10 @@ let homeworkPages = []
 for (var i = 0; i < homeworkStartCount; i++) {
 	homeworkPages.push(new ObjectParticle('📄'))
 }
+
+let simTime = new Date(0)
+simTime.setHours(10)
+simTime.setMinutes(0)
 
 
 // Moving noise into the global scope so its not attached to P5 
@@ -200,19 +205,23 @@ document.addEventListener("DOMContentLoaded", function(){
 
 
 			p.draw = () => {
-				p.background(210, 70, 60, 1)
 
-				// Not updating the background
 				let t = p.millis()*.001
 				let dt = p.deltaTime*.001
 
 				// UPDATE! 
 				if (!paused) {
+					if (p.frameCount % 4 == 0) {
+						simTime.setSeconds(simTime.getSeconds() + 60);
+					}
 					busybodyFlock.update(t, dt)			
 					lazybonesFlock.update(t, dt)	
 					coffeeCups.forEach(cup => cup.update(t, dt))
 					homeworkPages.forEach(page => page.update(t, dt))		
 				}
+
+				let dayLevel = (Math.sin((simTime.getTime()*.0000000727)+2.15)*30)+30
+				p.background(210, 70, dayLevel, 1)
 
 				// Draw busybodies
 				busybodyFlock.draw(p)
@@ -235,13 +244,14 @@ document.addEventListener("DOMContentLoaded", function(){
 					//lightmap.debugDraw(p)
 					debugDrawWindmap(p, t)
 				}
-
-				//Uncomment for the detail window, if you want it
-				// p.fill(0, 0, 100, .8)
-				// p.noStroke()
-				// p.rect(0, 0, 100, 50)
-				// p.fill("black")
-				// p.text(drawMode, 5, 10)
+				
+				if (FLAGS.showClock) {
+					p.fill(0, 0, 100, .8)
+					p.noStroke()
+					p.rect(0, 0, 80, 20)
+					p.fill("black")
+					p.text(simTime.toLocaleTimeString('en-US', { timeStyle: "short" }), 8, 15)
+				}
 					
 			}
 		}, 

@@ -53,7 +53,7 @@ class ObjectParticle {
 
 		// Give each object a random weight
 		// To keep them from bunching together
-		this.weight = 5 + Math.random()*20
+		this.weight = 10 + Math.random()*20
 
 		this.windForce = new Vector(0, 0)
 		this.gravity = new Vector(0, 25)
