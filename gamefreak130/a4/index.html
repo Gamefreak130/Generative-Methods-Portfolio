@@ -36,18 +36,19 @@
 	<div id="main-column">
 		<h1>📝 Busybodies ☕</h1>
 
-		
-
 		<div id="main">
 
 		</div>
 
 		<div id="controls">
-			<button onclick="paused=!paused">Pause</button>
-			<button onclick="drawMode='snow'">❄️</button>
-			<button onclick="drawMode='boid'">🐦</button>
-			<button onclick="FLAGS.drawObjectDebug=!FLAGS.drawObjectDebug">Object Debug</button>
-			<button onclick="FLAGS.drawBoidDebug=!FLAGS.drawBoidDebug">Busybody Debug</button>
+			<button title="Pause" onclick="paused=!paused">Pause</button>
+			<button title="Place Coffee" onclick="drawMode='coffee'">☕</button>
+			<button title="Place Homework" onclick="drawMode='homework'">📝</button>
+			<button title="Place Busybody" onclick="drawMode='busybody'">👨‍💼</button>
+			<button title="Place Lazybone" onclick="drawMode='lazybone'">🎮‍</button>
+			<button title="Object Debug" onclick="FLAGS.drawObjectDebug=!FLAGS.drawObjectDebug">Object Debug</button>
+			<button title="Busybody Debug" onclick="FLAGS.drawBusybodyDebug=!FLAGS.drawBusybodyDebug">Busybody Debug</button>
+			<button title="Lazybones Debug" onclick="FLAGS.drawLazybonesDebug=!FLAGS.drawLazybonesDebug">Lazybones Debug</button>
 		</div>
 	</div>
 
