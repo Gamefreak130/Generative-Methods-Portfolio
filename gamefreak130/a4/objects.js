@@ -70,6 +70,8 @@ class ObjectParticle {
 
 	// Time and delta time
 	update(t, dt) {
+		dt = Math.min(1, dt) // Don't ever update more than 1 second at a time, things get too unstable
+		
 		this.windForce = getWindForce(t, ...this.position)
 
 		this.velocity.addMultiples(this.gravity, dt)
@@ -82,10 +84,10 @@ class ObjectParticle {
 		
 
 
-		const maxSpeed = 100
+		/*const maxSpeed = 100
 		let speed = this.velocity.magnitude
 		if (speed > maxSpeed)
-			this.velocity.mult(maxSpeed/speed)
+			this.velocity.mult(maxSpeed/speed)*/
 
 		// Apply some drag.  This keeps them from getting a runaway effect
 		let drag = 1 - SLIDERS.Drag.value()
