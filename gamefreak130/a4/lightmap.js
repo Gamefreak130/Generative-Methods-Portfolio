@@ -40,7 +40,7 @@ class Lightmap {
 					console.log("create lightmap")
 					// Basic setup tasks
 					p.createCanvas(simulationWidth/lightmapScale, simulationHeight/lightmapScale);
-					p.colorMode(p.RGBA, 255);
+					p.colorMode(p.RGB, 255);
 					p.background(0, 0, 0)
 
 					

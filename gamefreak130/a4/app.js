@@ -9,14 +9,12 @@ let SLIDERS = {
 }
 
 let FLAGS = {
-	drawBugDebug: false,
 	drawBoidDebug: false,
-	drawRocketDebug: true,
-	drawSnowDebug: false
+	drawObjectDebug: false
 }
 
 
-let drawMode = "bug"
+let drawMode = "boid"
 
 // Pause button, also pause on spacebar
 let paused = false
@@ -48,32 +46,6 @@ let coffeeCount = 3
 
 let homeworkPages = []
 let homeworkCount = 3
-
-
-// Hold some snow
-const snowParticleStartCount = 0
-let snowParticles = []
-
-// Rocket things
-const rocketStartCount = 0
-let rockets = []
-for (var i = 0; i < rocketStartCount; i++) { 
-	rockets.push(new Rocket())
-}
-
-// Initialize bug things
-let bugs = []
-let bugFood = []
-let bugFoodCount = 0
-let bugStartCount = 0
-for (var i = 0; i < bugFoodCount; i++) {
-	let pos = new Vector(Math.random()*simulationWidth, Math.random()*simulationHeight)
-	bugFood.push(pos)
-}
-for (var i = 0; i< bugStartCount; i++) {
-	let pos = [Math.random()*simulationWidth, Math.random()*simulationHeight]
-	bugs.push(new Braitenbug(pos))
-}
 
 
 // Moving noise into the global scope so its not attached to P5 
@@ -121,31 +93,15 @@ document.addEventListener("DOMContentLoaded", function(){
 		fadeSpeed: 10, // 0: no fading, 100 instant fade
 		drawChannels: function() {
 
-			// A function that calls
-			bugFood.forEach(spot => lightmap.drawBlurryLight({
-				pt: spot, 
+			coffeeCups.forEach(cup => lightmap.drawBlurryLight({
+				pt: cup.position, 
 				channels: [0, 255, 0], 
 				intensity: .4,
 				size: 1.8
 			}))
 
-
-			bugs.forEach(boid => lightmap.drawBlurryLight({
-				pt: boid.position, 
-				channels: [0, 0, 255], 
-				intensity: .4,
-				size: 1.2
-			}))
-
-			coffeeCups.forEach(spot => lightmap.drawBlurryLight({
-				pt: spot, 
-				channels: [0, 255, 0], 
-				intensity: .4,
-				size: 1.8
-			}))
-
-			homeworkPages.forEach(spot => lightmap.drawBlurryLight({
-				pt: spot, 
+			homeworkPages.forEach(page => lightmap.drawBlurryLight({
+				pt: page.position, 
 				channels: [255, 0, 0], 
 				intensity: .4,
 				size: 1.8
@@ -177,26 +133,18 @@ document.addEventListener("DOMContentLoaded", function(){
 				p.colorMode(p.HSL);
 				p.background("white")
 
-
-				for (var i = 0; i < snowParticleStartCount; i++) {
-					let pt = new SnowParticle()
-					snowParticles.push(pt)
-				}
-
 				for (var i = 0; i < coffeeCount; i++) {
-					let pos = new Vector(p.random()*simulationWidth, p.random()*simulationHeight)
-					coffeeCups.push(pos)
+					coffeeCups.push(new ObjectParticle('☕'))
 				}
 
 				for (var i = 0; i < homeworkCount; i++) {
-					let pos = new Vector(p.random()*simulationWidth, p.random()*simulationHeight)
-					homeworkPages.push(pos)
+					homeworkPages.push(new ObjectParticle('📝'))
 				}
 
 
 				// CREATE SLIDERS!!
 				//createSlider({label:"forceDisplay", min:.1, max: 4, defaultValue: .4, step: .1})
-				createSlider({label:"boidCohesion", min:0, max: 200, defaultValue: 40})
+				createSlider({label:"boidCohesion", min:0, max: 200, defaultValue: 30})
 				createSlider({label:"boidAlignment", min:0, max: 200, defaultValue: 50})
 				//createSlider({label:"boidWander", min:0, max: 200, defaultValue: 50})
 
@@ -208,7 +156,6 @@ document.addEventListener("DOMContentLoaded", function(){
 			}
 
 			p.mouseClicked = () => {
-				let t = p.millis()*.001
 
 				// Processing likes to greedily respond to *all* mouse events, 
 				// even when outside the canvas
@@ -251,71 +198,27 @@ document.addEventListener("DOMContentLoaded", function(){
 				let t = p.millis()*.001
 				let dt = p.deltaTime*.001
 
-
-				//-------------------
-				// Kateparticles 
-
 				// UPDATE! 
 				if (!paused) {
-					bugs.forEach(b => b.update(t, dt))
 					boidFlock.update(t, dt)				
-					snowParticles.forEach(pt => pt.update(t, dt))		
-					rockets.forEach(pt => pt.update(t, dt))		
+					coffeeCups.forEach(cup => cup.update(t, dt))
+					homeworkPages.forEach(page => page.update(t, dt))		
 				}
-
-				// Draw bugs
-				if (FLAGS.drawBugDebug) {
-					lightmap.debugDraw(p)
-
-
-					bugs.forEach(b => b.debugDraw(p))
-				}
-
-				// Move the food around
-				bugFood.forEach((food, index) => {
-					food[0] = (3*simulationWidth*noise(t*.025, index))%simulationWidth
-					food[1] = (3*simulationHeight*noise(t*.025, index + 100))%simulationHeight
-				})
-
-				coffeeCups.forEach((food, index) => {
-					food[0] += 2*(noise(t*0.1, index) - 0.5)
-					food[0] = (food[0] + simulationWidth)%simulationWidth
-					food[1] += 2*(noise(t*0.1, index + 100) - 0.5)
-					food[1] = (food[1] + simulationHeight)%simulationHeight
-				})
-
-				homeworkPages.forEach((page, index) => {
-					page[0] += 2*(noise(t*0.1, index) - 0.5)
-					page[0] = (page[0] + simulationWidth)%simulationWidth
-					page[1] += 2*(noise(t*0.1, index + 100) - 0.5)
-					page[1] = (page[1] + simulationHeight)%simulationHeight
-				})
-
-				p.fill(130, 100, 50)
-				p.stroke(170, 100, 30)
-				bugFood.forEach(food => p.circle(...food, 10))
-				bugs.forEach(b => b.draw(p))
-
-				p.textSize(15)
-				coffeeCups.forEach(food => p.text('☕', ...food))
-				homeworkPages.forEach(page => p.text('📝', ...page))
 
 				// Draw boids
 				boidFlock.draw(p)
 				if (FLAGS.drawBoidDebug) {
 					boidFlock.debugDraw(p)
 				}
-				
-				// Draw snow things
-				snowParticles.forEach(pt => pt.draw(p))
-				if (FLAGS.drawSnowDebug) {
-					debugDrawSnow(p, t)
-				}
-					
-				// Draw rockets
-				rockets.forEach(rocket => rocket.draw(p, t))
-				if (FLAGS.drawRocketDebug) {
-					rockets.forEach(rocket => rocket.debugDraw(p))
+
+				// Draw objects
+				coffeeCups.forEach(cup => cup.draw(p))
+				homeworkPages.forEach(page => page.draw(p))
+
+				// Draw windmap
+				if (FLAGS.drawObjectDebug) {
+					lightmap.debugDraw(p)
+					debugDrawWindmap(p, t)
 				}
 
 				//Uncomment for the detail window, if you want it

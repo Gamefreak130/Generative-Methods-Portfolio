@@ -72,7 +72,7 @@ let Boid = class {
 
 		this.forces.hunger.mult(0)
 		coffeeCups.forEach(food => {
-			let vectorToFood = Vector.getDifference(this.position, food)
+			let vectorToFood = Vector.getDifference(this.position, food.position)
 			let hungerRange = this.heldObject === '☕' ? 200 : 200
 			if (vectorToFood.magnitude < hungerRange) {
 				let multiplier = this.heldObject === '☕' ? -100 : 100
@@ -83,8 +83,8 @@ let Boid = class {
 		})
 
 		this.forces.homework.mult(0)
-		homeworkPages.forEach(food => {
-			let vectorToHomework = Vector.getDifference(this.position, food)
+		homeworkPages.forEach(page => {
+			let vectorToHomework = Vector.getDifference(this.position, page.position)
 			let homeworkRange = this.heldObject === '📝' ? 200 : 200
 			if (vectorToHomework.magnitude < homeworkRange) {
 				let multiplier = this.heldObject === '📝' ? -100 : 100
@@ -174,7 +174,7 @@ let Boid = class {
 		}
 
 		coffeeCups.some(food => {
-			if (Vector.getDifference(this.position, food).magnitude < 20) {
+			if (Vector.getDifference(this.position, food.position).magnitude < 20) {
 				this.heldObject = '☕'
 				return true
 			}
@@ -182,7 +182,7 @@ let Boid = class {
 		})
 
 		homeworkPages.some(page => {
-			if (Vector.getDifference(this.position, page).magnitude < 20) {
+			if (Vector.getDifference(this.position, page.position).magnitude < 20) {
 				this.heldObject = '📝'
 				return true
 			}

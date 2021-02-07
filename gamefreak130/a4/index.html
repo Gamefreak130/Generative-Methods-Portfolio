@@ -6,7 +6,7 @@
 		<!-- <link rel="preconnect" href="https://fonts.gstatic.com">
 		<link href="https://fonts.googleapis.com/css2?family=Gorditas&display=swap" rel="stylesheet">
  -->
-		<title>The Sim(pleton)s</title>
+		<title>Busybodies</title>
 	
 
 		<link rel="stylesheet" href="page.css">
@@ -24,10 +24,8 @@
 	<!-- add your particle code --> 
 	<script src="boid.js"></script>
 	<script src="boid-flock.js"></script>
-	<script src="braitenberg.js"></script>
 	<script src="lightmap.js"></script>
 	<script src="snow.js"></script>
-	<script src="rocket.js"></script>
 
 	<script src="app.js"></script>
 
@@ -36,7 +34,7 @@
 <body>
 
 	<div id="main-column">
-		<h1>🐦 boids 'n' bugs 🐞</h1>
+		<h1>📝 Busybodies ☕</h1>
 
 		
 
@@ -45,15 +43,11 @@
 		</div>
 
 		<div id="controls">
-			<button onclick="paused=!paused">pause</button>
-			<button onclick="drawMode='rocket'">🚀</button>
+			<button onclick="paused=!paused">Pause</button>
 			<button onclick="drawMode='snow'">❄️</button>
 			<button onclick="drawMode='boid'">🐦</button>
-			<button onclick="drawMode='bug'">🐞</button>
-			<button onclick="FLAGS.drawRocketDebug=!FLAGS.drawRocketDebug">rocketDebug</button>
-			<button onclick="FLAGS.drawSnowDebug=!FLAGS.drawSnowDebug">snowDebug</button>
-			<button onclick="FLAGS.drawBugDebug=!FLAGS.drawBugDebug">bugDebug</button>
-			<button onclick="FLAGS.drawBoidDebug=!FLAGS.drawBoidDebug">boidDebug</button>
+			<button onclick="FLAGS.drawObjectDebug=!FLAGS.drawObjectDebug">Object Debug</button>
+			<button onclick="FLAGS.drawBoidDebug=!FLAGS.drawBoidDebug">Busybody Debug</button>
 		</div>
 	</div>
 

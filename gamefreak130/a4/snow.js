@@ -1,6 +1,3 @@
-
-let snowParticleCount = 0
-
 // Get the wind force at this time and position
 function getWindForce(t, x, y) {
 	let scale = .002
@@ -11,8 +8,8 @@ function getWindForce(t, x, y) {
 
 }
 
-// Draw a windmap of the snow at the current time
-function debugDrawSnow(p, t) {
+// Draw a windmap at the current time
+function debugDrawWindmap(p, t) {
 
 	// How many columns and rows of points do we want?
 	let tileSize = 20
@@ -40,24 +37,19 @@ function debugDrawSnow(p, t) {
 	}
 }
 
-// Snow particles that are pushed around by a wind vectorfield
-class SnowParticle {
-	constructor(position, velocity) {
-		// Have an id number
-		this.idNumber = snowParticleCount++
-
-		if (velocity === undefined)
-			velocity = Vector.randomPolar(10)
+// ObjectParticles are particles pushed around by a wind vectorfield
+class ObjectParticle {
+	constructor(type, position) {
+		//if (velocity === undefined)
+			//velocity = Vector.randomPolar(10)
 		
 		if (position === undefined)
 			position = new Vector(Math.random()*simulationWidth, Math.random()*simulationHeight)
 		
-		// Create a random snow particle... somewhere
+		// Create an object... somewhere
 		this.position = new Vector(...position)
-		this.velocity = new Vector(...velocity)
-		
-		// Randomly sized snow
-		this.size = 3 + Math.random()*9
+		this.velocity = Vector.randomPolar(5) //new Vector(...velocity)
+		this.type = type
 
 		this.windForce = new Vector(0, 0)
 		this.gravity = new Vector(0, 25)
@@ -65,26 +57,10 @@ class SnowParticle {
 
 
 	draw(p) {
-
-		
-		// I decide which drawing style (emoji, lil emoji, or circle)
-		// to use based on the particle's idNumber
-		p.textSize(this.size)
-		if (this.idNumber % 5 == 0) {
-			p.noStroke()
-			p.fill(255, 0, 255, 1)
-			p.text("❄️", ...this.position)
-		}
-		else if (this.idNumber % 5 == 1) {
-			p.noStroke()
-			p.fill(255, 0, 255, 1)
-			p.text("❄", ...this.position)
-		} else {
-			p.noStroke()
-			p.fill(255, 0, 255, .5) // white snow
-			p.circle(...this.position, this.size)
-
-		}
+		p.textSize(15)
+		p.fill(0)
+		p.noStroke()
+		p.text(this.type, ...this.position)
 	}
 
 
@@ -94,8 +70,7 @@ class SnowParticle {
 
 		this.velocity.addMultiples(this.gravity, dt)
 
-		// Move with the wind force, but bigger particles move less
-		this.velocity.addMultiples(this.windForce, dt/this.size)
+		this.velocity.addMultiples(this.windForce, dt/10)
 		this.position.addMultiples(this.velocity, dt)
 
 		this.position[0] = (this.position[0] + simulationWidth)%simulationWidth
@@ -108,6 +83,8 @@ class SnowParticle {
 		if (speed > maxSpeed)
 			this.velocity.mult(maxSpeed/speed)
 
-		this.velocity.mult(.99)
+		// Apply some drag.  This keeps them from getting a runaway effect
+		let drag = 1 - SLIDERS.Drag.value()
+		this.velocity.mult(drag)
 	}
 }
