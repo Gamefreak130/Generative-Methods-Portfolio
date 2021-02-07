@@ -140,7 +140,10 @@ let Busybody = class extends Boid {
 			let vectorToFood = Vector.getDifference(this.position, food.position)
 			let hungerRange = 200
 			if (vectorToFood.magnitude < hungerRange) {
-				let multiplier = this.heldObject === '☕' ? -100 : 100
+				let multiplier = SLIDERS.CoffeeAttraction.value() 
+				if (this.heldObject === '☕') { 
+					multiplier *= -1/2
+				}
 				let pushStrength = multiplier*(hungerRange - vectorToFood.magnitude)/hungerRange
 				vectorToFood.normalize().mult(pushStrength)
 				this.forces.hunger.add(vectorToFood)
@@ -152,7 +155,10 @@ let Busybody = class extends Boid {
 			let vectorToHomework = Vector.getDifference(this.position, page.position)
 			let homeworkRange = 200
 			if (vectorToHomework.magnitude < homeworkRange) {
-				let multiplier = this.heldObject === '📝' ? -100 : 100
+				let multiplier = SLIDERS.HomeworkAttraction.value() 
+				if (this.heldObject === '📝') { 
+					multiplier *= -1/2
+				}
 				let pushStrength = multiplier*(homeworkRange - vectorToHomework.magnitude)/homeworkRange
 				vectorToHomework.normalize().mult(pushStrength)
 				this.forces.homework.add(vectorToHomework)

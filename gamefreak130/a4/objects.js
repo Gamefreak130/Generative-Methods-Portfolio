@@ -53,7 +53,7 @@ class ObjectParticle {
 
 		// Give each object a random weight
 		// To keep them from bunching together
-		this.weight = 7 + Math.random()*10
+		this.weight = 5 + Math.random()*20
 
 		this.windForce = new Vector(0, 0)
 		this.gravity = new Vector(0, 25)
@@ -71,7 +71,7 @@ class ObjectParticle {
 	// Time and delta time
 	update(t, dt) {
 		dt = Math.min(1, dt) // Don't ever update more than 1 second at a time, things get too unstable
-		
+
 		this.windForce = getWindForce(t, ...this.position)
 
 		this.velocity.addMultiples(this.gravity, dt)

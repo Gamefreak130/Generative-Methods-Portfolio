@@ -50,17 +50,17 @@ for (var i = 0; i < lazybonesStartCount; i++) {
 }
 
 
-const coffeeStartCount = 3
+const coffeeStartCount = 2
 let coffeeCups = []
 for (var i = 0; i < coffeeStartCount; i++) {
 	coffeeCups.push(new ObjectParticle('☕'))
 }
 
 
-const homeworkStartCount = 3
+const homeworkStartCount = 2
 let homeworkPages = []
 for (var i = 0; i < homeworkStartCount; i++) {
-	homeworkPages.push(new ObjectParticle('📝'))
+	homeworkPages.push(new ObjectParticle('📄'))
 }
 
 
@@ -158,16 +158,11 @@ document.addEventListener("DOMContentLoaded", function(){
 
 
 				// CREATE SLIDERS!!
-				//createSlider({label:"forceDisplay", min:.1, max: 4, defaultValue: .4, step: .1})
 				createSlider({label:"BusybodyCohesion", min:0, max: 200, defaultValue: 30})
 				createSlider({label:"LazybonesCohesion", min:0, max: 200, defaultValue: 150})
-				//createSlider({label:"Alignment", min:0, max: 200, defaultValue: 50})
-				//createSlider({label:"boidWander", min:0, max: 200, defaultValue: 50})
-
-				//createSlider({label:"katesNoiseScale", min:.1, max: 4, defaultValue: .4, step: .1})
-				//createSlider({label:"katesWiggleForce", min:.1, max: 4, defaultValue: .4, step: .1})
+				createSlider({label:"CoffeeAttraction", min:0, max: 200, defaultValue: 100})
+				createSlider({label:"HomeworkAttraction", min:0, max: 200, defaultValue: 100})
 				createSlider({label:"Drag", min:.001, max: .1, defaultValue: .02, step: .001})
-				//createSlider({label:"katesBorder", min:1, max: 100, defaultValue: 30, step: 1})
 				
 			}
 
@@ -191,10 +186,10 @@ document.addEventListener("DOMContentLoaded", function(){
 							new Busybody(mousePos)
 							break;
 						case "coffee": 
-							coffeeCups.push(new ObjectParticle('☕'))
+							coffeeCups.push(new ObjectParticle('☕', mousePos))
 							break;
 						case "homework": 
-							homeworkPages.push(new ObjectParticle('📝'))
+							homeworkPages.push(new ObjectParticle('📝', mousePos))
 							break;
 						case "lazybone": 
 							new Lazybone(mousePos)
