@@ -12,7 +12,6 @@ let FLAGS = {
 	drawBugDebug: false,
 	drawBoidDebug: false,
 	drawRocketDebug: true,
-	drawKatesDebug: false,
 	drawSnowDebug: false
 }
 
@@ -44,11 +43,12 @@ const boidParticlesStartCount = 10
 let boidFlock = new BoidFlock()
 
 let coffeeCups = []
-let coffeeCount = 5
-for (var i = 0; i < coffeeCount; i++) {
-	let pos = new Vector(Math.random()*simulationWidth, Math.random()*simulationHeight)
-	coffeeCups.push(pos)
-}
+let coffeeCount = 3
+
+
+let homeworkPages = []
+let homeworkCount = 3
+
 
 // Hold some snow
 const snowParticleStartCount = 0
@@ -144,18 +144,19 @@ document.addEventListener("DOMContentLoaded", function(){
 				size: 1.8
 			}))
 
-			// boidFlock.boids.forEach(boid => lightmap.drawBlurryLight({
-			// 	pt: boid.position, 
-			// 	channels: [255, 0, 0], 
-			// 	intensity: .4,
-			// 	size: 1.2
-			// }))
-			// boidFlock.boids.forEach(boid => lightmap.drawBlurryLight({
-			// 	pt: boid.position, 
-			// 	channels: [255, 0, 0], 
-			// 	intensity: 1,
-			// 	size: 1
-			// }))
+			homeworkPages.forEach(spot => lightmap.drawBlurryLight({
+				pt: spot, 
+				channels: [255, 0, 0], 
+				intensity: .4,
+				size: 1.8
+			}))
+
+			boidFlock.boids.forEach(boid => lightmap.drawBlurryLight({
+				pt: boid.position, 
+				channels: [0, 0, 255], 
+				intensity: 1,
+				size: 0.5
+			}))
 
 		}
 	})
@@ -182,17 +183,27 @@ document.addEventListener("DOMContentLoaded", function(){
 					snowParticles.push(pt)
 				}
 
+				for (var i = 0; i < coffeeCount; i++) {
+					let pos = new Vector(p.random()*simulationWidth, p.random()*simulationHeight)
+					coffeeCups.push(pos)
+				}
+
+				for (var i = 0; i < homeworkCount; i++) {
+					let pos = new Vector(p.random()*simulationWidth, p.random()*simulationHeight)
+					homeworkPages.push(pos)
+				}
+
 
 				// CREATE SLIDERS!!
-				createSlider({label:"forceDisplay", min:.1, max: 4, defaultValue: .4, step: .1})
-				createSlider({label:"boidCohesion", min:0, max: 200, defaultValue: 50})
+				//createSlider({label:"forceDisplay", min:.1, max: 4, defaultValue: .4, step: .1})
+				createSlider({label:"boidCohesion", min:0, max: 200, defaultValue: 40})
 				createSlider({label:"boidAlignment", min:0, max: 200, defaultValue: 50})
-				createSlider({label:"boidWander", min:0, max: 200, defaultValue: 50})
+				//createSlider({label:"boidWander", min:0, max: 200, defaultValue: 50})
 
-				createSlider({label:"katesNoiseScale", min:.1, max: 4, defaultValue: .4, step: .1})
-				createSlider({label:"katesWiggleForce", min:.1, max: 4, defaultValue: .4, step: .1})
-				createSlider({label:"katesDrag", min:.001, max: .1, defaultValue: .014, step: .001})
-				createSlider({label:"katesBorder", min:1, max: 100, defaultValue: 30, step: 1})
+				//createSlider({label:"katesNoiseScale", min:.1, max: 4, defaultValue: .4, step: .1})
+				//createSlider({label:"katesWiggleForce", min:.1, max: 4, defaultValue: .4, step: .1})
+				createSlider({label:"Drag", min:.001, max: .1, defaultValue: .02, step: .001})
+				//createSlider({label:"katesBorder", min:1, max: 100, defaultValue: 30, step: 1})
 				
 			}
 
@@ -267,8 +278,17 @@ document.addEventListener("DOMContentLoaded", function(){
 				})
 
 				coffeeCups.forEach((food, index) => {
-					food[0] = (3*simulationWidth*noise(t*.025, index))%simulationWidth
-					food[1] = (3*simulationHeight*noise(t*.025, index + 100))%simulationHeight
+					food[0] += 2*(noise(t*0.1, index) - 0.5)
+					food[0] = (food[0] + simulationWidth)%simulationWidth
+					food[1] += 2*(noise(t*0.1, index + 100) - 0.5)
+					food[1] = (food[1] + simulationHeight)%simulationHeight
+				})
+
+				homeworkPages.forEach((page, index) => {
+					page[0] += 2*(noise(t*0.1, index) - 0.5)
+					page[0] = (page[0] + simulationWidth)%simulationWidth
+					page[1] += 2*(noise(t*0.1, index + 100) - 0.5)
+					page[1] = (page[1] + simulationHeight)%simulationHeight
 				})
 
 				p.fill(130, 100, 50)
@@ -278,6 +298,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
 				p.textSize(15)
 				coffeeCups.forEach(food => p.text('☕', ...food))
+				homeworkPages.forEach(page => p.text('📝', ...page))
 
 				// Draw boids
 				boidFlock.draw(p)

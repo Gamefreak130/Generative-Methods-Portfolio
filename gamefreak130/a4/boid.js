@@ -59,11 +59,11 @@ let Boid = class {
 			if (boid !== this) {
 				let offset = Vector.getDifference(this.position, boid.position)
 				let d = offset.magnitude
-				let range = 200
+				let range = 100
 				// How close am I to this boid?
 
 				if (d < range) {		
-					let pushStrength = -90*(range - d)/range		
+					let pushStrength = -150*(range - d)/range		
 					offset.normalize().mult(pushStrength)
 					this.forces.separation.add(offset)
 				}
@@ -73,7 +73,7 @@ let Boid = class {
 		this.forces.hunger.mult(0)
 		coffeeCups.forEach(food => {
 			let vectorToFood = Vector.getDifference(this.position, food)
-			let hungerRange = this.heldObject === '☕' ? 200 : 400
+			let hungerRange = this.heldObject === '☕' ? 200 : 200
 			if (vectorToFood.magnitude < hungerRange) {
 				let multiplier = this.heldObject === '☕' ? -100 : 100
 				let pushStrength = multiplier*(hungerRange - vectorToFood.magnitude)/hungerRange
@@ -82,7 +82,17 @@ let Boid = class {
 			}
 		})
 
-
+		this.forces.homework.mult(0)
+		homeworkPages.forEach(food => {
+			let vectorToHomework = Vector.getDifference(this.position, food)
+			let homeworkRange = this.heldObject === '📝' ? 200 : 200
+			if (vectorToHomework.magnitude < homeworkRange) {
+				let multiplier = this.heldObject === '📝' ? -100 : 100
+				let pushStrength = multiplier*(homeworkRange - vectorToHomework.magnitude)/homeworkRange
+				vectorToHomework.normalize().mult(pushStrength)
+				this.forces.homework.add(vectorToHomework)
+			}
+		})
 
 		// The boid gets a boost in the direction of the flocks average speed
 		this.forces.alignment.copy(this.flock.averageVelocity).mult(.5)
@@ -109,10 +119,10 @@ let Boid = class {
  		}
 
  		// Clamp the maximum speed, to keep the boids from running too fast (or too slow)
-		this.velocity.clampMagnitude(4, 100)
+		this.velocity.clampMagnitude(4, 75)
 
  		// Apply some drag.  This keeps them from getting a runaway effect
- 		let drag = 1 - SLIDERS.katesDrag.value()
+ 		let drag = 1 - SLIDERS.Drag.value()
  		this.velocity.mult(drag)
 
  		// Wrap around
@@ -134,7 +144,8 @@ let Boid = class {
  				arrowSize: 6,
  				center: this.position,
  				multiple: forceDisplayMultiple,
- 				color: [index*30 + 240, 100, 70, 1],
+				color: [index*30 + 240, 100, 70, 1],
+				//label: forceKey
  			})
 		})
 	}
@@ -165,6 +176,14 @@ let Boid = class {
 		coffeeCups.some(food => {
 			if (Vector.getDifference(this.position, food).magnitude < 20) {
 				this.heldObject = '☕'
+				return true
+			}
+			return false
+		})
+
+		homeworkPages.some(page => {
+			if (Vector.getDifference(this.position, page).magnitude < 20) {
+				this.heldObject = '📝'
 				return true
 			}
 			return false

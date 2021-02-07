@@ -260,7 +260,8 @@
 				arrowSize=10, 
 				color=[0,0,0], 
 				offsetStart=0, 
-				offsetEnd=0}) {
+				offsetEnd=0,
+				label=''}) {
 
 
 			let m = this.magnitude*multiple
@@ -277,8 +278,12 @@
 			p.line(0, 0, m - arrowSize, 0)
 
 			p.translate(m, 0)
+			
 
 			p.noStroke()
+			p.fill(0)
+			p.text(label, 0, 0)
+
 			p.fill(color)
 			
 			p.beginShape()
