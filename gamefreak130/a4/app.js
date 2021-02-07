@@ -9,12 +9,13 @@ let SLIDERS = {
 }
 
 let FLAGS = {
-	drawBoidDebug: false,
-	drawObjectDebug: false
+	drawBusybodyDebug: false,
+	drawObjectDebug: false,
+	drawLazybonesDebug: false
 }
 
 
-let drawMode = "boid"
+let drawMode = "busybody"
 
 // Pause button, also pause on spacebar
 let paused = false
@@ -36,16 +37,31 @@ let simulationWidth = 600
 let simulationHeight = 360
 
 
-// an object to hold boids
-const boidParticlesStartCount = 10
-let boidFlock = new BoidFlock()
+const busybodyStartCount = 10
+let busybodyFlock = new BoidFlock()
+for (var i = 0; i < busybodyStartCount; i++) {
+	new Busybody()
+}
 
+const lazybonesStartCount = 2
+let lazybonesFlock = new BoidFlock()
+for (var i = 0; i < lazybonesStartCount; i++) {
+	new Lazybone()
+}
+
+
+const coffeeStartCount = 3
 let coffeeCups = []
-let coffeeCount = 3
+for (var i = 0; i < coffeeStartCount; i++) {
+	coffeeCups.push(new ObjectParticle('☕'))
+}
 
 
+const homeworkStartCount = 3
 let homeworkPages = []
-let homeworkCount = 3
+for (var i = 0; i < homeworkStartCount; i++) {
+	homeworkPages.push(new ObjectParticle('📝'))
+}
 
 
 // Moving noise into the global scope so its not attached to P5 
@@ -107,9 +123,16 @@ document.addEventListener("DOMContentLoaded", function(){
 				size: 1.8
 			}))
 
-			boidFlock.boids.forEach(boid => lightmap.drawBlurryLight({
+			busybodyFlock.boids.forEach(boid => lightmap.drawBlurryLight({
 				pt: boid.position, 
 				channels: [0, 0, 255], 
+				intensity: 1,
+				size: 0.5
+			}))
+
+			lazybonesFlock.boids.forEach(boid => lightmap.drawBlurryLight({
+				pt: boid.position, 
+				channels: [0, 255, 255], 
 				intensity: 1,
 				size: 0.5
 			}))
@@ -133,19 +156,12 @@ document.addEventListener("DOMContentLoaded", function(){
 				p.colorMode(p.HSL);
 				p.background("white")
 
-				for (var i = 0; i < coffeeCount; i++) {
-					coffeeCups.push(new ObjectParticle('☕'))
-				}
-
-				for (var i = 0; i < homeworkCount; i++) {
-					homeworkPages.push(new ObjectParticle('📝'))
-				}
-
 
 				// CREATE SLIDERS!!
 				//createSlider({label:"forceDisplay", min:.1, max: 4, defaultValue: .4, step: .1})
-				createSlider({label:"boidCohesion", min:0, max: 200, defaultValue: 30})
-				createSlider({label:"boidAlignment", min:0, max: 200, defaultValue: 50})
+				createSlider({label:"BusybodyCohesion", min:0, max: 200, defaultValue: 30})
+				createSlider({label:"LazybonesCohesion", min:0, max: 200, defaultValue: 150})
+				//createSlider({label:"Alignment", min:0, max: 200, defaultValue: 50})
 				//createSlider({label:"boidWander", min:0, max: 200, defaultValue: 50})
 
 				//createSlider({label:"katesNoiseScale", min:.1, max: 4, defaultValue: .4, step: .1})
@@ -169,22 +185,19 @@ document.addEventListener("DOMContentLoaded", function(){
 					let mousePos = new Vector(p.mouseX, p.mouseY)
 							
 
-					// Make a new boid
+					// Place a new thing onto the canvas
 					switch(drawMode) {
-						case "boid": 
-							boidFlock.addBoid(mousePos)
+						case "busybody": 
+							new Busybody(mousePos)
 							break;
-						case "bug": 
-							bugs.push(new Braitenbug(mousePos))
+						case "coffee": 
+							coffeeCups.push(new ObjectParticle('☕'))
 							break;
-						case "snow": 
-							snowParticles.push(new SnowParticle(mousePos))
+						case "homework": 
+							homeworkPages.push(new ObjectParticle('📝'))
 							break;
-						case "spring": 
-							springSystem.add(mousePos)
-							break;
-						case "rocket": 
-							rockets.push(new Rocket(mousePos))
+						case "lazybone": 
+							new Lazybone(mousePos)
 							break;
 					}
 				} 
@@ -200,15 +213,22 @@ document.addEventListener("DOMContentLoaded", function(){
 
 				// UPDATE! 
 				if (!paused) {
-					boidFlock.update(t, dt)				
+					busybodyFlock.update(t, dt)			
+					lazybonesFlock.update(t, dt)	
 					coffeeCups.forEach(cup => cup.update(t, dt))
 					homeworkPages.forEach(page => page.update(t, dt))		
 				}
 
-				// Draw boids
-				boidFlock.draw(p)
-				if (FLAGS.drawBoidDebug) {
-					boidFlock.debugDraw(p)
+				// Draw busybodies
+				busybodyFlock.draw(p)
+				if (FLAGS.drawBusybodyDebug) {
+					busybodyFlock.debugDraw(p)
+				}
+
+				// Draw lazybones
+				lazybonesFlock.draw(p)
+				if (FLAGS.drawLazybonesDebug) {
+					lazybonesFlock.debugDraw(p)
 				}
 
 				// Draw objects
@@ -217,7 +237,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
 				// Draw windmap
 				if (FLAGS.drawObjectDebug) {
-					lightmap.debugDraw(p)
+					//lightmap.debugDraw(p)
 					debugDrawWindmap(p, t)
 				}
 

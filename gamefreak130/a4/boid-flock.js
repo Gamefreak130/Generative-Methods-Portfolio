@@ -5,22 +5,6 @@ class BoidFlock {
 		this.boids = []
 		this.averageVelocity = new Vector(0, 0)
 		this.center = new Vector(0, 0)
-
-		for (var i = 0; i < boidParticlesStartCount; i++) {
-			this.addBoid()
-		}
-
-	}
-
-	// Create a boid at this position (or if none, )
-	addBoid(position, velocity) {
-		if (!position)
-			position = Vector.random([0,simulationWidth],[0,simulationHeight])
-		if (!velocity)
-			velocity = Vector.randomPolar(50)
-
-		let boid = new Boid(this, position, velocity)
-		this.boids.push(boid)
 	}
 
 
