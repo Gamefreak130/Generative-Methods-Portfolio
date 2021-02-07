@@ -51,6 +51,10 @@ class ObjectParticle {
 		this.velocity = Vector.randomPolar(5) //new Vector(...velocity)
 		this.type = type
 
+		// Give each object a random weight
+		// To keep them from bunching together
+		this.weight = 7 + Math.random()*10
+
 		this.windForce = new Vector(0, 0)
 		this.gravity = new Vector(0, 25)
 	}
@@ -70,7 +74,7 @@ class ObjectParticle {
 
 		this.velocity.addMultiples(this.gravity, dt)
 
-		this.velocity.addMultiples(this.windForce, dt/10)
+		this.velocity.addMultiples(this.windForce, dt/this.weight)
 		this.position.addMultiples(this.velocity, dt)
 
 		this.position[0] = (this.position[0] + simulationWidth)%simulationWidth
