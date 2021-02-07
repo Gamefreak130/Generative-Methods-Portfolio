@@ -194,7 +194,7 @@ document.addEventListener("DOMContentLoaded", function(){
 							coffeeCups.push(new ObjectParticle('☕', mousePos))
 							break;
 						case "homework": 
-							homeworkPages.push(new ObjectParticle('📝', mousePos))
+							homeworkPages.push(new ObjectParticle('📄', mousePos))
 							break;
 						case "lazybone": 
 							new Lazybone(mousePos)

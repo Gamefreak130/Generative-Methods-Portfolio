@@ -1,15 +1,19 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <html>
-	<head>
+<head>
 
-		<!-- <link rel="preconnect" href="https://fonts.gstatic.com">
-		<link href="https://fonts.googleapis.com/css2?family=Gorditas&display=swap" rel="stylesheet">
- -->
-		<title>Busybodies</title>
+	<!-- <link rel="preconnect" href="https://fonts.gstatic.com">
+	<link href="https://fonts.googleapis.com/css2?family=Gorditas&display=swap" rel="stylesheet">-->
+
+	<title>Busybodies</title>
+
+	<!-- Load Bootstrap CSS -->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
 	
 
-		<link rel="stylesheet" href="page.css">
+	<link rel="stylesheet" href="page.css">
 
 
 	<!-- P5 Loaded from a CDN -->
@@ -37,20 +41,33 @@
 		<h1>📝 Busybodies ☕</h1>
 
 		<div id="main">
-<!--TODO style moar-->
+<!--TODO hide lightmap by default?-->
 		</div>
 
 		<div id="controls">
-			<button title="Place Coffee" onclick="drawMode='coffee'">☕</button>
-			<button title="Place Homework" onclick="drawMode='homework'">📄</button>
-			<button title="Place Busybody" onclick="drawMode='busybody'">👨‍💼</button>
-			<button title="Place Lazybone" onclick="drawMode='lazybone'">🎮‍</button>
+			<div class="btn-group" role="group" aria-label="Drawing Tools">
+				<input type="radio" name="drawing tools" class="btn-check" id="coffee" onclick="drawMode='coffee'">
+				<label class="btn btn-outline-dark" for="coffee" title="Place Coffee">☕</label>
 
-			<button title="Pause" onclick="paused=!paused">Pause</button>
-			<button title="Show/Hide Clock" onclick="FLAGS.showClock=!FLAGS.showClock">Show/Hide Clock</button>
-			<button title="Object Debug" onclick="FLAGS.drawObjectDebug=!FLAGS.drawObjectDebug">Object Debug</button>
-			<button title="Busybody Debug" onclick="FLAGS.drawBusybodyDebug=!FLAGS.drawBusybodyDebug">Busybody Debug</button>
-			<button title="Lazybones Debug" onclick="FLAGS.drawLazybonesDebug=!FLAGS.drawLazybonesDebug">Lazybones Debug</button>
+				<input type="radio" name="drawing tools" class="btn-check" id="homework" onclick="drawMode='homework'">
+				<label class="btn btn-outline-dark" for="homework" title="Place Homework">📄</label>
+
+				<input type="radio" name="drawing tools" class="btn-check" id="busybody" onclick="drawMode='busybody'" checked>
+				<label class="btn btn-outline-dark" for="busybody" title="Place Busybody">👨‍💼</label>
+
+				<input type="radio" name="drawing tools" class="btn-check" id="lazybone" onclick="drawMode='lazybone'">
+				<label class="btn btn-outline-dark" for="lazybone" title="Place Lazybone">🎮</label>
+			</div>
+
+			<div class="btn-group" role="group" aria-label="Debug Tools">
+				<button class="btn btn-outline-dark" title="Pause" onclick="paused=!paused">Pause</button>
+				<button class="btn btn-outline-dark" title="Show/Hide Clock" onclick="FLAGS.showClock=!FLAGS.showClock">Show/Hide Clock</button>
+				<button class="btn btn-outline-dark" title="Object Debug" onclick="FLAGS.drawObjectDebug=!FLAGS.drawObjectDebug">Object Debug</button>
+				<button class="btn btn-outline-dark" title="Busybody Debug" onclick="FLAGS.drawBusybodyDebug=!FLAGS.drawBusybodyDebug">Busybody Debug</button>
+				<button class="btn btn-outline-dark" title="Lazybones Debug" onclick="FLAGS.drawLazybonesDebug=!FLAGS.drawLazybonesDebug">Lazybones Debug</button>
+			</div>
+
+
 		</div>
 	</div>
 
