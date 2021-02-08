@@ -220,6 +220,8 @@ document.addEventListener("DOMContentLoaded", function(){
 
 				// UPDATE! 
 				if (!paused) {
+					// Update the current time in the simulation
+					// But only every four frames, or else it'll go WAY too fast
 					if (p.frameCount % 4 == 0) {
 						simTime.setSeconds(simTime.getSeconds() + 60);
 					}
@@ -229,6 +231,7 @@ document.addEventListener("DOMContentLoaded", function(){
 					homeworkPages.forEach(page => page.update(t, dt))		
 				}
 
+				// Using a sine wave from the current simulation time creates a very rough day/night cycle
 				let dayLevel = (Math.sin((simTime.getTime()*.0000000727)+2.15)*30)+30
 				p.background(210, 70, dayLevel, 1)
 

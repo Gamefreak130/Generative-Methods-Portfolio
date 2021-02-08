@@ -39,16 +39,13 @@ function debugDrawWindmap(p, t) {
 
 // ObjectParticles are particles pushed around by a wind vectorfield
 class ObjectParticle {
-	constructor(type, position) {
-		//if (velocity === undefined)
-			//velocity = Vector.randomPolar(10)
-		
+	constructor(type, position) {		
 		if (position === undefined)
 			position = new Vector(Math.random()*simulationWidth, Math.random()*simulationHeight)
 		
 		// Create an object... somewhere
 		this.position = new Vector(...position)
-		this.velocity = Vector.randomPolar(5) //new Vector(...velocity)
+		this.velocity = Vector.randomPolar(5)
 		this.type = type
 
 		// Give each object a random weight

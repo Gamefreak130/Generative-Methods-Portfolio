@@ -135,6 +135,8 @@ let Busybody = class extends Boid {
 			}
 		})
 
+		// Draw the busybody to coffee
+		// Unless they are holding coffee, in which case they will stay away
 		this.forces.hunger.mult(0)
 		coffeeCups.forEach(food => {
 			let vectorToFood = Vector.getDifference(this.position, food.position)
@@ -150,6 +152,8 @@ let Busybody = class extends Boid {
 			}
 		})
 
+		// Draw the busybody to homework
+		// Unless they are holding homework, in which case they will stay away
 		this.forces.homework.mult(0)
 		homeworkPages.forEach(page => {
 			let vectorToHomework = Vector.getDifference(this.position, page.position)
@@ -165,6 +169,7 @@ let Busybody = class extends Boid {
 			}
 		})
 
+		// Busybodies hate Lazybones! Stay away!
 		this.forces.lazybones.mult(0)
 		lazybonesFlock.boids.forEach(lazybone => {
 			let vectorToLazybone = Vector.getDifference(this.position, lazybone.position)
@@ -176,12 +181,6 @@ let Busybody = class extends Boid {
 				this.forces.lazybones.add(vectorToLazybone)
 			}
 		})
-	}
-
-	update(t, dt) {
-		super.update(t, dt)
-
-		
 	}
 
 	draw(p) {
@@ -264,6 +263,7 @@ let Lazybone = class extends Boid {
 			}
 		})
 
+		// Stay away from everything!
 		this.forces.avoidance.mult(0)
 		coffeeCups.forEach(food => {
 			let vectorToFood = Vector.getDifference(this.position, food.position)
