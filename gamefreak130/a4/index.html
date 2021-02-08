@@ -40,9 +40,7 @@
 	<div id="main-column">
 		<h1>📝 Busybodies ☕</h1>
 
-		<div id="main">
-<!--TODO hide lightmap by default?-->
-		</div>
+		<div id="main"></div>
 
 		<div id="controls">
 			<div class="btn-group" role="group" aria-label="Drawing Tools">
@@ -62,6 +60,7 @@
 			<div class="btn-group" role="group" aria-label="Debug Tools">
 				<button class="btn btn-outline-dark" title="Pause" onclick="paused=!paused">Pause</button>
 				<button class="btn btn-outline-dark" title="Show/Hide Clock" onclick="FLAGS.showClock=!FLAGS.showClock">Show/Hide Clock</button>
+				<button class="btn btn-outline-dark" title="Show/Hide Lightmap" onclick="toggleLightmap()">Show/Hide Lightmap</button>
 				<button class="btn btn-outline-dark" title="Object Debug" onclick="FLAGS.drawObjectDebug=!FLAGS.drawObjectDebug">Object Debug</button>
 				<button class="btn btn-outline-dark" title="Busybody Debug" onclick="FLAGS.drawBusybodyDebug=!FLAGS.drawBusybodyDebug">Busybody Debug</button>
 				<button class="btn btn-outline-dark" title="Lazybones Debug" onclick="FLAGS.drawLazybonesDebug=!FLAGS.drawLazybonesDebug">Lazybones Debug</button>
@@ -71,9 +70,7 @@
 		</div>
 	</div>
 
-	<div id="lightmap">
-
-	</div>
+	<div id="lightmap" style="visibility: hidden;"></div>
 
 </body>
 </html>

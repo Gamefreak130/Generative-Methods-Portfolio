@@ -34,8 +34,8 @@ let mainP5 = undefined
 let lightmap = undefined
 
 
-let simulationWidth = 600
-let simulationHeight = 360
+let simulationWidth = 810
+let simulationHeight = 486
 
 
 const busybodyStartCount = 10
@@ -44,21 +44,21 @@ for (var i = 0; i < busybodyStartCount; i++) {
 	new Busybody()
 }
 
-const lazybonesStartCount = 2
+const lazybonesStartCount = 4
 let lazybonesFlock = new BoidFlock()
 for (var i = 0; i < lazybonesStartCount; i++) {
 	new Lazybone()
 }
 
 
-const coffeeStartCount = 2
+const coffeeStartCount = 4
 let coffeeCups = []
 for (var i = 0; i < coffeeStartCount; i++) {
 	coffeeCups.push(new ObjectParticle('☕'))
 }
 
 
-const homeworkStartCount = 2
+const homeworkStartCount = 4
 let homeworkPages = []
 for (var i = 0; i < homeworkStartCount; i++) {
 	homeworkPages.push(new ObjectParticle('📄'))
@@ -95,13 +95,22 @@ function randomPoint(p) {
 	return [(Math.random())*p.width, (Math.random())*p.height]
 }
 
-
+// Show/Hide the Lightmap in the corner
+function toggleLightmap() {
+	let lm = document.getElementById('lightmap')
+	if (lm.style.visibility == 'hidden') {
+		console.log('unhiding')
+		lm.style.visibility = 'visible';
+	}
+	else {
+		console.log('hiding')
+		lm.style.visibility = 'hidden'
+	}
+}
 
 // Do setup
 document.addEventListener("DOMContentLoaded", function(){
 	console.log("Steering")
-
-	
 
 	// Create the processing instances, and store it in mainP5 and lightmapP5, 
 	// where we can access it anywhere in the code
@@ -164,7 +173,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
 				// CREATE SLIDERS!!
 				createSlider({label:"BusybodyCohesion", min:0, max: 200, defaultValue: 30})
-				createSlider({label:"LazybonesCohesion", min:0, max: 200, defaultValue: 150})
+				createSlider({label:"LazybonesCohesion", min:0, max: 200, defaultValue: 100})
 				createSlider({label:"CoffeeAttraction", min:0, max: 200, defaultValue: 100})
 				createSlider({label:"HomeworkAttraction", min:0, max: 200, defaultValue: 100})
 				createSlider({label:"Drag", min:.001, max: .1, defaultValue: .02, step: .001})
