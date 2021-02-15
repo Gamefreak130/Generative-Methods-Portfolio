@@ -16,8 +16,8 @@ document.addEventListener("DOMContentLoaded", function(){
 					<button @click="enterInput">↩️</button>
 				</div>
 				<div>
-					<button @click="handleInput('brew')">☕️</button>
-					<button @click="handleInput('drink')">drink</button>
+					<button @click="handleInput('new pet')">New Pet</button>
+					<!--<button @click="handleInput('drink')">drink</button>-->
 				</div>
 			
 
@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", function(){
 				let output = this.bot.respondTo(text)
 
 				setTimeout(() => {
-					this.postToChat(output, "☕️")
+					this.bot.post(output)
 					
 				}, Math.random()*100 + 400)
 
@@ -71,13 +71,17 @@ document.addEventListener("DOMContentLoaded", function(){
 			console.log("Vue app is all set up....")
 			setInterval(() => {
 				
-
 			}, 1000)
 
 			this.bot.post = (text) =>  {
 				// this is now the vue object
-				this.postToChat(text, "☕️")
+				this.postToChat(text, this.bot.avatar)
 			}
+
+			this.bot.post("Greetings!")
+			this.bot.avatar = "❔"
+			this.bot.post("What kind of pet would you like? Type \"random\" to select a friendly critter at random!")
+			this.bot.choosingPet = true
 
 		},
 		
@@ -85,7 +89,7 @@ document.addEventListener("DOMContentLoaded", function(){
 		data() {
 			return {
 				// Store the bot
-				bot: new CoffeeBot(),
+				bot: new PetBot(),
 
 				// And the message
 				messages: [],
