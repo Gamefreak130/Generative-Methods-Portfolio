@@ -204,6 +204,9 @@ class PetBot {
 			case "squid":
 				this.avatar = "🦑"
 				break
+			case "otter":
+				this.avatar = "🦦"
+				break
 			default:
 				this.choosingPet = true
 				break 
