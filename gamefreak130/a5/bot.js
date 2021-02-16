@@ -3,25 +3,38 @@ class PetBot {
 		this.avatar = "❔"
 		this.choosingPet = false
 		this.choosingName = false
+		this.petName = ""
+		this.petType = ""
+		this.petAdj = ""
+		this.mood = ""
+		this.timeToNextMood = 0
 
 		this.grammar = tracery.createGrammar(petGrammar)
 		this.grammar.addModifiers(baseEngModifiers)
-		console.log("A type of coffee:", this.grammar.flatten("#coffeeType#"))
 	}
 
 	respondTo(s) {
 		if (s.toLowerCase() === "new pet") {
 			this.avatar = "❔"
 			this.choosingPet = true
-			return "What kind of pet would you like? Type \"random\" to select a friendly critter at random!"
+			return "What kind of pet would you like?"
 		}
 
 		if (this.choosingPet) {
 			return this.parsePet(s)
 		}
 		if (this.choosingName) {
-			// TODO set pet name
+			if (s.trim().toLowerCase().includes("surprise me")) {
+				s = this.grammar.flatten("#petNames#")
+			}
+			this.petName = s
+			this.petAdj = this.grammar.flatten("#personalityAdjs.capitalizeAll#")
+			this.choosingName = false
+			this.setNewMood()
+			return this.grammar.flatten(`#[name:${this.petName} the ${this.petAdj} ${this.petType}][feeling:${this.mood}]intro#`)
 		}
+
+		//TODO the rest of this
 
 		/*if (s.includes("drink")) {
 			if (this.coffeeAmount  == 0)
@@ -58,15 +71,22 @@ class PetBot {
 		return `'${s}' isn't a type of coffee`*/
 	}
 
-	parsePet(s) {
-		s = s.toLowerCase()
-		this.choosingPet = false
-		if (s.includes("random")) {
-			s = this.grammar.flatten("#availableAnimal#")
-		}
+	setNewMood() {
+		this.mood = this.grammar.flatten("#moods#")
+		this.timeToNextMood = Math.ceil(Math.random()*5)
+	}
 
+	parsePet(s) {
+		let sanitizedStr = s.trim().toLowerCase()
+		let randomized = false
+		this.choosingPet = false
+		if (sanitizedStr.includes("surprise me")) {
+			randomized = true
+			s = sanitizedStr = this.grammar.flatten("#petTypes#")
+		}
+		console.log(sanitizedStr)
 		// Holy switch cases Batman
-		switch (s) {
+		switch (sanitizedStr) {
 			case "monkey":
 			case "chimpanzee":
 				this.avatar = "🐵"
@@ -79,9 +99,11 @@ class PetBot {
 				this.avatar = "🦝"
 				break
 			case "cat":
+			case "kitten":
 				this.avatar = "🐱"
 				break
 			case "horse":
+			case "pony":
 				this.avatar = "🐴"
 				break
 			case "unicorn":
@@ -210,8 +232,14 @@ class PetBot {
 			return this.grammar.flatten("\"" + s + "\"? #invalidChoice#")
 		}
 		else {
+			this.petType = sanitizedStr.replace(/\w\S*/g, (w) => (w.replace(/^\w/, (c) => c.toUpperCase())))
 			this.choosingName = true
-			return this.grammar.flatten("What #choiceAdjs.a# choice! And what will be this " + s + "'s name?")
+			if (randomized) {
+				return this.grammar.flatten("I found #choiceAdjs.a# " + s + " for you! What name would you like to give it?")
+			}
+			else {
+				return this.grammar.flatten("\"" + s + "\"? What #choiceAdjs.a# choice! And what will be this " + s + "'s name?")
+			}
 		}
 	}
 }

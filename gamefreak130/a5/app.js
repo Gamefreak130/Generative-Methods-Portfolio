@@ -1,14 +1,9 @@
-
-
-
 // Do setup
 document.addEventListener("DOMContentLoaded", function(){
 	new Vue({
 		el: "#app",
 		template: `<div id="app">
 			<chat-widget :messages="messages" />
-
-			Coffee: {{bot.coffeeAmount}}/{{bot.maxCoffee}} cups of {{bot.coffeeFlavor}}
 
 			<div id="controls">
 				<div>
@@ -17,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function(){
 				</div>
 				<div>
 					<button @click="handleInput('new pet')">New Pet</button>
-					<!--<button @click="handleInput('drink')">drink</button>-->
+					<button @click="handleInput('surprise me')">Surprise Me</button>
 				</div>
 			
 
@@ -69,8 +64,11 @@ document.addEventListener("DOMContentLoaded", function(){
 		mounted() {
 
 			console.log("Vue app is all set up....")
-			setInterval(() => {
-				
+			setTimeout(() => {
+				this.bot.post("Greetings!")
+			}, 100)
+			setTimeout(() => {
+				this.bot.post("What kind of pet would you like? Type \"Surprise Me\" or click the button to select a friendly critter at random!")
 			}, 1000)
 
 			this.bot.post = (text) =>  {
@@ -78,11 +76,8 @@ document.addEventListener("DOMContentLoaded", function(){
 				this.postToChat(text, this.bot.avatar)
 			}
 
-			this.bot.post("Greetings!")
 			this.bot.avatar = "❔"
-			this.bot.post("What kind of pet would you like? Type \"random\" to select a friendly critter at random!")
 			this.bot.choosingPet = true
-
 		},
 		
 
