@@ -8,7 +8,9 @@ html,body {
 	display: flex;
 }
 
-
+* {
+	box-sizing: unset;
+}
 
 #app {
 	padding: 10px;
@@ -20,21 +22,18 @@ html,body {
 .chat-widget {
 	overflow: hidden;
 	margin: 0px auto;
-	width: 400px;
+	width: 778px;
 	flex: 1;
-	border-radius: 14px;
-	padding: 5px;
-	border: 2px solid hsla(0,0%, 30%, .6);
+	border: 1px solid rgb(133, 133, 133);
 	display: flex;
 	flex-direction: column;
 }
 
 .chat-widget>.messages {
-	overflow: scroll;
+	overflow: auto;
 	flex: 1;
-	border-radius: 10px;
 	box-shadow: inset 0px 1px 4px rgba(0, 0, 0, .4);
-	background-color: hsla(220, 50%, 90%, 1);
+	background-color: #A7B0D3;
 }
 
 .chat-row	 {
@@ -42,6 +41,7 @@ html,body {
 	position: relative;
 	display: flex;
 	flex-direction: row-reverse;
+	margin: 10px 0 20px 0;
 }
 
 .chat-owner	 {
@@ -51,14 +51,14 @@ html,body {
 	padding: 3px 6px;
 	border-radius: 20px;
 	vertical-align: bottom;
-	background-color: hsla(120, 50%, 90%,1);
+	background-color: #A7D3CA;
 	width: 24px;
 	height: 24px;
-	box-shadow: 1px 2px 2px 1px rgba(0, 0, 0, .5);
+	border: 1px solid hsla(0,0%, 30%, .4);
 }
 .chat-message {
 	display: inline-block;
-	padding: 3px 6px;
+	padding: 5px 10px;
 	margin: 4px;
 	border-radius: 20px 20px 0px 20px;
 	border: 2px solid hsla(0,0%, 30%, .4);
@@ -84,12 +84,4 @@ html,body {
 	border-radius: 10px;
 	background-color: hsla(0, 100%, 90%, 1);
 	
-}
-
-
-
-
-.chat-widget>.controls {
-	
-	height: 40px;
 }

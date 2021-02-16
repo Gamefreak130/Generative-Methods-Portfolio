@@ -6,13 +6,13 @@ document.addEventListener("DOMContentLoaded", function(){
 			<chat-widget :messages="messages" />
 
 			<div id="controls">
-				<div>
+				<div class="btn-group" role="group" aria-label="Chat Input">
 					<input ref="input" v-model="currentInput" @keyup.enter="enterInput">
-					<button @click="enterInput">↩️</button>
+					<button class="btn btn-outline-dark btn-sm" @click="enterInput">➡️</button>
 				</div>
-				<div>
-					<button @click="handleInput('new pet')">New Pet</button>
-					<button @click="handleInput('surprise me')">Surprise Me</button>
+				<div class="btn-group" role="group" aria-label="Auto Controls">
+					<button class="btn btn-outline-dark" @click="handleInput('new pet')">New Pet</button>
+					<button class="btn btn-outline-dark" @click="handleInput('surprise me')">Surprise Me</button>
 				</div>
 			
 
@@ -39,14 +39,15 @@ document.addEventListener("DOMContentLoaded", function(){
 				let text = this.currentInput
 				this.currentInput = ""
 
-				
-				this.handleInput(text)
+				if (text !== "") {
+					this.handleInput(text)
+				}
 
 			},
 
 			handleInput(text) {
 				// Does bot things
-				this.postToChat(text, "😐", true)
+				this.postToChat(text, "😀", true)
 
 				// Add to the messages in chat
 			
