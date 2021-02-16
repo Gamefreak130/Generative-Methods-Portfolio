@@ -31,48 +31,29 @@ class PetBot {
 			this.petAdj = this.grammar.flatten("#personalityAdjs.capitalizeAll#")
 			this.choosingName = false
 			this.setNewMood()
-			return this.grammar.flatten(`#[name:${this.petName} the ${this.petAdj} ${this.petType}][feeling:${this.mood}]intro#`)
+			return this.grammar.flatten(`#[name:${this.petName} the ${this.petAdj} ${this.petType}][mood:${this.mood}]intro#`)
 		}
 
-		//TODO the rest of this
-
-		/*if (s.includes("drink")) {
-			if (this.coffeeAmount  == 0)
-				return "No coffee, brew more"
-			
-			this.coffeeAmount -= 1
-			return this.grammar.flatten("The flavor is #flavor#")
+		if (s.trim().toLowerCase() == "surprise me") {
+			//TODO random actions
 		}
 
-		// Brew new coffee
-		if (s.includes("brew")) {
-
-			// Create new values
-			this.coffeeFlavor = this.grammar.flatten("#coffeeName#")
-			this.coffeeDescription = this.grammar.flatten("#coffeeDesc#")
-
-			let interval = setInterval(() => {
-				this.coffeeAmount = Math.min(this.coffeeAmount + 1,  this.maxCoffee)
-				if (this.coffeeAmount >= this.maxCoffee)
-					clearInterval(interval)
-
-
-				console.log("post to chat")
-				this.post("... ")
-			}, 200)
-			
-
-			return `Brewing ${this.coffeeFlavor}, ${this.coffeeDescription}`
-
+		let useShortName = Math.random() >= 0.5
+		let name = useShortName ? this.petName : `${this.petName} the ${this.petAdj} ${this.petType}`
+		this.timeToNextMood--
+		if (this.timeToNextMood == 0) {
+			this.setNewMood()
+			return this.grammar.flatten(`#[name:${name}][mood:${this.mood}][action:${s}]yesChange#`)
 		}
-
-		if (s.includes(418))
-			return `I'm a coffee pot`
-		return `'${s}' isn't a type of coffee`*/
+		
+		return this.grammar.flatten(`#[name:${name}][mood:${this.mood}][action:${s}]noChange#`)
 	}
 
 	setNewMood() {
-		this.mood = this.grammar.flatten("#moods#")
+		let prevMood = this.mood
+		while (this.mood == prevMood) {
+			this.mood = this.grammar.flatten("#moods#")
+		}
 		this.timeToNextMood = Math.ceil(Math.random()*5)
 	}
 

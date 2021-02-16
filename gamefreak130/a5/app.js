@@ -55,7 +55,6 @@ document.addEventListener("DOMContentLoaded", function(){
 
 				setTimeout(() => {
 					this.bot.post(output)
-					
 				}, Math.random()*100 + 400)
 
 			}
