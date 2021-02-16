@@ -18,7 +18,7 @@ let petGrammar = {
     "loveVP" : ["waters your plants", "nibbles your #bodyPart#", "snuggles up to you", "offers to drive you to work", "cooks #meal#", "gives you #gift#", "#motionVerb.s# circles around you"],
     "motionVerb" : ["run", "walk", "swim"],
     "bodyPart" : ["finger", "toe", "nose", "eyeball", "calf", "shoulder", "knee"],
-    "meal" : ["breakfast", "lunch", "dinner"],
+    "meal" : ["breakfast", "lunch", "dinner", "#petFood#"],
     "petFood" : ["#petTypes# food", "#petTypes# kibble", "cake", "vanilla ice cream", "bread crumbs", "bread", "carbonara", "mashed potatoes"],
     "gift" : ["two turntables and a microphone", "several pairs of socks", "a hand-knit sweater", "a surgical mask", "a Nintendo Switch", "a used copy of The Sims 4", "a shiny trash can", "way too many hugs", "a gift card to Applebee's", "a denim vest"]
 
