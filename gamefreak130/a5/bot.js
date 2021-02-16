@@ -35,7 +35,7 @@ class PetBot {
 		}
 
 		if (s.trim().toLowerCase() == "surprise me") {
-			//TODO random actions
+			s = this.grammar.flatten(`#[name:${this.petName}]surpriseActions#`)
 		}
 
 		let useShortName = Math.random() >= 0.5
@@ -65,7 +65,7 @@ class PetBot {
 			randomized = true
 			s = sanitizedStr = this.grammar.flatten("#petTypes#")
 		}
-		console.log(sanitizedStr)
+
 		// Holy switch cases Batman
 		switch (sanitizedStr) {
 			case "monkey":
