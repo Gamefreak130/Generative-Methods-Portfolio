@@ -4,10 +4,10 @@ Vue.component("simulation", {
 		Game of Life ({{mode}} mode)
 		
 		<!-- Draw the grid, and optionally specify the size -->
-		<grid-p5 :sim="sim" :size="12" />
+		<grid-p5 :sim="sim" :size="25" />
 
 		<div class="controls">
-			<div style="display:inline-block;padding:4px" v-for="power,emoji in sim.emojiPower">{{emoji}}:{{power}}</div>
+			<div style="display:inline-block;padding:4px"></div>
 			
 			<div v-if="mode=='continuous'">
 				BG radiation<input v-model="sim.backgroundRadiation">
