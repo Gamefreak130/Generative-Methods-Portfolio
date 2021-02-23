@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", function(){
 			<p>Wow! Even without masks (and with barely any productivity when working at home), we hardly ever drop below 95% of our max production capacity!</p>
 			<p>
 				So what's the upshot? <b>Just because we can go back to our 2018-19 work habits doesn't mean we should be so quick to do so.</b>
-				By continuing to support work from home (or even permitting more generous sick leave) and supporting the use of masks when one needs to work in-office while sick, employers can not only promote the health of those under them, but they could even boost their own bottom lines as well.
+				By continuing to support work from home (or even permitting more generous sick leave) and recommending the use of masks when one needs to work in-office while sick, employers can not only promote the health of those under them, but they could even boost their own bottom lines as well.
 			</p>
 			<p>No matter how bad things get, we should never aim to return to some status quo; we should always strive for <b>improvement</b> in our lives and the lives of those around us.</p>
 

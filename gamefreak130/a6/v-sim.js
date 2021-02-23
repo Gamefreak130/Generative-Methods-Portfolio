@@ -1,22 +1,20 @@
 Vue.component("simulation", {
 	template: `
 	<div class="simulation">
-		Game of Life ({{mode}} mode)
-		
 		<!-- Draw the grid, and optionally specify the size -->
 		<grid-p5 :sim="sim" :size="25" />
 
 		<div class="controls">
-			<div style="display:inline-block;padding:4px"></div>
-
 			<div>
-				Total Production: {{sim.totalProduction}}
-				Production This Step: {{sim.productionThisStep}}
+				<span class="production">Total Production: {{sim.totalProduction}}</span>
+				<span class="production">Production This Step: {{sim.productionThisStep}}</span>
 			</div>
 			
-			<button class="emoji-button" @click="sim.randomize()">🎲</button>
-			<button class="emoji-button" @click="sim.step()">🥾</button>
-			<button class="emoji-button" @click="sim.isPaused=!sim.isPaused">{{sim.isPaused?"▶️":"⏸"}}</button>
+			<div class="btn-group btn-group-sm" role="group" aria-label="Button Group">
+				<button class="btn btn-outline-dark" @click="sim.randomize()">🎲</button>
+				<button class="btn btn-outline-dark" @click="sim.step()">🥾</button>
+				<button class="btn btn-outline-dark" @click="sim.isPaused=!sim.isPaused">{{sim.isPaused?"▶️":"⏸"}}</button>
+			</div>
 		</div>
 	</div>
 	`,
