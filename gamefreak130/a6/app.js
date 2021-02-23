@@ -40,10 +40,12 @@ document.addEventListener("DOMContentLoaded", function(){
 			<simulation mode="mask"/>
 			<p>This is the correct simulation. Cells die if they have <2 or >3 neighbors, but only come back to life if they have 3.  Its less interesting than I remembered, though.  Everything gets stable very quickly.  I guess "gliders" are the only interesting things about the traditional version?</p>
 
-			<simulation mode="emoji"/>
+			<simulation mode="productivityNoMask"/>
 			<p>Next I tried making a version with emoji, where the emoji would always be fixed at "live" to see if they would seed more interesting behavior.  I guess they do, a bit?</p>
 
-			<simulation mode="continuous"/>
+			<simulation mode="productivityMask"/>
+
+			<simulation mode="productivityWFH"/>
 			<p>Finally, I made a continuous version, where values aren't clamped to 1 or 0.  You can also change the background radiation that spawns new life, or the life threshold that decides the chance that anything will live or die.</p>
 
 

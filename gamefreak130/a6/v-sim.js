@@ -8,10 +8,10 @@ Vue.component("simulation", {
 
 		<div class="controls">
 			<div style="display:inline-block;padding:4px"></div>
-			
-			<div v-if="mode=='continuous'">
-				BG radiation<input v-model="sim.backgroundRadiation">
-				Life threshold<input v-model="sim.lifeThreshold">
+
+			<div>
+				Total Production: {{sim.totalProduction}}
+				Production This Step: {{sim.productionThisStep}}
 			</div>
 			
 			<button class="emoji-button" @click="sim.randomize()">🎲</button>

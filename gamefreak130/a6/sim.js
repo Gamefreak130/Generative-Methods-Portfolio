@@ -37,6 +37,9 @@ class Simulation {
 		this.sickGrid = new Grid(this.w, this.h, this.isWrapped)
 		this.sickGrid.setAll((x,y) => 0)
 
+		this.totalProduction = 0
+		this.productionThisStep = 0
+
 		// Tuning values for the continuous simulation
 		this.backgroundRadiation = 1
 		this.lifeThreshold = 1
@@ -51,21 +54,23 @@ class Simulation {
 		
 		this.heightMap.setAll((x,y) => noise(x*this.noiseScale, y*this.noiseScale + 100*this.noiseSeed)/1.25)
 		
-		if (this.mode === "continuous")
-			this.gameOfLifeGrid.setAll((x,y) =>(this.heightMap.get(x, y)))
-		else
-			this.gameOfLifeGrid.setAll((x,y) =>Math.round(this.heightMap.get(x, y)))
+		this.gameOfLifeGrid.setAll((x,y) =>Math.round(this.heightMap.get(x, y)-0.1))
 		
 
 		// Add some random emoji
-		if (this.mode == "noMask")
+		if (this.mode === "noMask" || this.mode === "productivityNoMask")
 			this.emojiGrid.setAll((x,y) => this.gameOfLifeGrid.get(x,y) == 1 ? "🤒" : "🙂")
-		else
+		else if (this.mode === "productivityWFH") {
+			this.emojiGrid.setAll((x,y) => this.gameOfLifeGrid.get(x,y) == 1 ? "🤧" : "🙂")
+		}
+		else {
 			this.emojiGrid.setAll((x,y) => this.gameOfLifeGrid.get(x,y) == 1 ? "🤒" : "😷")
+		}
 	}
 
 	step() {
 		this.stepCount++
+		this.productionThisStep = 0
 
 		// Make one step
 		// Set all the next steps, then swap the buffers
@@ -87,24 +92,28 @@ class Simulation {
 			for (const em of [e0, e1, e2, e3]) {
 				if (em === "🤧")
 					sickCount += 1
+				else if (em === "🤒")
+					sickCount += 1/10
 			}
 			
 			switch (this.mode) {
 				case "noMask": {
 					if (currentValue === 1) {
+						this.productionThisStep += 1
 						if (this.stepCount >= this.sickGrid.get(x, y) + 14) {
 							this.emojiGrid.set(x, y, "🙂")
 							return 0
 						}
 
-						if (Math.random() > 0.25)
+						if (Math.random() > 0.5)
 							this.emojiGrid.set(x, y, "🤧")
 						else
 							this.emojiGrid.set(x, y, "🤒")
 
 						return 1
 					} else {
-						if (Math.random() > 0.99 - (0.2*sickCount)) {
+						this.productionThisStep += 10
+						if (Math.random() > 1 - (0.17*sickCount)) {
 							this.sickGrid.set(x, y, this.stepCount)
 							this.emojiGrid.set(x, y, "🤒")
 							return 1
@@ -119,19 +128,21 @@ class Simulation {
 				
 				case "mask": {
 					if (currentValue === 1) {
+						this.productionThisStep += 1
 						if (this.stepCount >= this.sickGrid.get(x, y) + 14) {
 							this.emojiGrid.set(x, y, "😷")
 							return 0
 						}
 
-						if (Math.random() > 0.75)
+						if (Math.random() > 0.5)
 							this.emojiGrid.set(x, y, "🤧")
 						else
 							this.emojiGrid.set(x, y, "🤒")
 
 						return 1
 					} else {
-						if (Math.random() > 0.99 - (0.11*sickCount)) {
+						this.productionThisStep += 10
+						if (Math.random() > 1 - (0.08*sickCount)) {
 							this.sickGrid.set(x, y, this.stepCount)
 							this.emojiGrid.set(x, y, "🤒")
 							return 1
@@ -143,10 +154,9 @@ class Simulation {
 					return currentValue
 				}
 
-				case "emoji": {
-					let em = this.emojiGrid.get(x, y)
+				case "productivityNoMask": {
 					if (currentValue === 1) {
-						// "Any live cell with two or three live neighbours survives."
+						this.productionThisStep += 5
 						if (this.stepCount >= this.sickGrid.get(x, y) + 5) {
 							this.emojiGrid.set(x, y, "🙂")
 							return 0
@@ -159,8 +169,8 @@ class Simulation {
 
 						return 1
 					} else {
-						// "Any dead cell with three live neighbours becomes a live cell."
-						if (Math.random() > 0.99 - (0.25*count)) {
+						this.productionThisStep += 10
+						if (Math.random() > 0.95 - (0.1*sickCount)) {
 							this.sickGrid.set(x, y, this.stepCount)
 							this.emojiGrid.set(x, y, "🤒")
 							return 1
@@ -172,25 +182,59 @@ class Simulation {
 					return currentValue
 				}
 
-				case "continuous": {
-					let bgRadiation = parseFloat(this.backgroundRadiation)
-					//let threshold = parseFloat(this.lifeThreshold)
-					
-					let bgValue = (.2 + bgRadiation)*Math.pow(noise(x*this.noiseScale, y*this.noiseScale, .2*this.stepCount), 2)
-					if (currentValue > .1) {
-						// "Any live cell with two or three live neighbours survives."
-						let dist = Math.abs(count - 2.5)
+				case "productivityMask": {
+					if (currentValue === 1) {
+						this.productionThisStep += 5
+						if (this.stepCount >= this.sickGrid.get(x, y) + 5) {
+							this.emojiGrid.set(x, y, "😷")
+							return 0
+						}
 
-						// if (Math.random() > dist*threshold)
-						// 	return 1
+						if (Math.random() > 0.5)
+							this.emojiGrid.set(x, y, "🤧")
+						else
+							this.emojiGrid.set(x, y, "🤒")
 
-						return bgValue
+						return 1
 					} else {
-						// "Any dead cell with three live neighbours becomes a live cell."
-						if (count === 3)
-							return 1 + Math.random()
+						this.productionThisStep += 10
+						if (Math.random() > 0.98 - (0.06*sickCount)) {
+							this.sickGrid.set(x, y, this.stepCount)
+							this.emojiGrid.set(x, y, "🤒")
+							return 1
+						}
 				
-						return bgValue
+						this.emojiGrid.set(x, y, "😷")
+						return 0
+					}
+					return currentValue
+				}
+
+				case "productivityWFH": {
+					if (currentValue === 1) {
+						let em = this.emojiGrid.get(x, y)
+						this.productionThisStep += em == "🤧" ? 5 : 0
+						if (this.stepCount >= this.sickGrid.get(x, y) + 1) {
+							this.emojiGrid.set(x, y, "")
+							return 0
+						}
+
+						if (this.stepCount >= this.sickGrid.get(x, y) + 5) {
+							this.emojiGrid.set(x, y, "🙂")
+							return 0
+						}
+
+						return 1
+					} else {
+						this.productionThisStep += 10
+						if (Math.random() > 0.95 - (0.1*sickCount)) {
+							this.sickGrid.set(x, y, this.stepCount)
+							this.emojiGrid.set(x, y, "🤧")
+							return 1
+						}
+				
+						this.emojiGrid.set(x, y, "🙂")
+						return 0
 					}
 					return currentValue
 				}
@@ -205,6 +249,8 @@ class Simulation {
 
 			}
 		})	
+
+		this.totalProduction += this.productionThisStep
 
 		// Show the whole grid for debugging
 		// this.gameOfLifeGrid.debugPrintGrid()
