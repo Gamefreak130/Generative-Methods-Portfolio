@@ -23,24 +23,6 @@ Vue.component("grid-p5", {
 					}
 				}
 			}
-
-			p.mouseMoved = () => {
-				if (p.canvas.parentNode.querySelector(":hover") == p.canvas) {
-					let x = Math.floor(p.mouseX/this.size)
-					let y = Math.floor(p.mouseY/this.size)
-					
-					this.sim.select(x, y)
-				}
-			}
-
-			p.mouseDragged = () => {
-				if (p.canvas.parentNode.querySelector(":hover") == p.canvas) {
-					let x = Math.floor(p.mouseX/this.size)
-					let y = Math.floor(p.mouseY/this.size)
-					
-					this.sim.click(x, y)
-				}
-			}
 			
 		}, this.$el)
 	},

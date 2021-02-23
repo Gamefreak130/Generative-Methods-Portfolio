@@ -231,15 +231,4 @@ class Simulation {
 
 
 	}
-
-	//=====================================================
-	// Mouse interactions
-
-	select(x, y) {
-		this.selectedCell = [x, y]
-	}
-
-	click(x, y) {
-		this.gameOfLifeGrid.set(x, y, 1)
-	}
 }
