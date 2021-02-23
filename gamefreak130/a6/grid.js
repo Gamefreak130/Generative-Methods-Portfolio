@@ -1,11 +1,5 @@
 // A cellular automata grid
 
-
-function getRandom(arr) {
-	return arr[Math.floor(Math.random()*arr.length)]
-}
-
-
 class Grid {
 	constructor(w, h, isWrapped) {
 		this.isWrapped = isWrapped

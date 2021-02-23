@@ -1,10 +1,5 @@
-
-
-
-// let emoji = "🌷 🐑 🌲 🌳 🌴 🐟 🐠 🐡 🌱 🦞 🐙 🦀 🦐 🐄".split(" ")
-let emoji = "🌷 🐑 🌲".split(" ")
-
 let simCount = 0
+
 class Simulation {
 	// Some number of grids
 	constructor(mode) {
@@ -16,9 +11,6 @@ class Simulation {
 		this.stepCount = 0
 		
 		// Set my size
-		this.w = 40
-		this.h = 18
-		// But smaller if in emoji mode
 		this.w = 20
 		this.h = 10
 
@@ -40,10 +32,6 @@ class Simulation {
 		this.totalProduction = 0
 		this.productionThisStep = 0
 
-		// Tuning values for the continuous simulation
-		this.backgroundRadiation = 1
-		this.lifeThreshold = 1
-
 		this.randomize()
 
 	}
@@ -56,16 +44,17 @@ class Simulation {
 		
 		this.gameOfLifeGrid.setAll((x,y) =>Math.round(this.heightMap.get(x, y)-0.1))
 		
-
-		// Add some random emoji
-		if (this.mode === "noMask" || this.mode === "productivityNoMask")
+		if (this.mode === "noMask")
 			this.emojiGrid.setAll((x,y) => this.gameOfLifeGrid.get(x,y) == 1 ? "🤒" : "🙂")
-		else if (this.mode === "productivityWFH") {
+		else if (this.mode === "WFH") {
 			this.emojiGrid.setAll((x,y) => this.gameOfLifeGrid.get(x,y) == 1 ? "🤧" : "🙂")
 		}
 		else {
 			this.emojiGrid.setAll((x,y) => this.gameOfLifeGrid.get(x,y) == 1 ? "🤒" : "😷")
 		}
+
+		this.totalProduction = 0
+		this.productionThisStep = 0
 	}
 
 	step() {
@@ -76,7 +65,6 @@ class Simulation {
 		// Set all the next steps, then swap the buffers
 		
 		this.gameOfLifeGrid.setNext((x, y, currentValue) => {
-			//let neighbors = this.getNeighborPositions(x, y, true)
 			let n0 = this.gameOfLifeGrid.get(x + 1, y)
 			let n1 = this.gameOfLifeGrid.get(x - 1, y)
 			let n2 = this.gameOfLifeGrid.get(x, y + 1)
@@ -98,63 +86,6 @@ class Simulation {
 			
 			switch (this.mode) {
 				case "noMask": {
-					if (currentValue === 1) {
-						this.productionThisStep += 1
-						if (this.stepCount >= this.sickGrid.get(x, y) + 14) {
-							this.emojiGrid.set(x, y, "🙂")
-							return 0
-						}
-
-						if (Math.random() > 0.5)
-							this.emojiGrid.set(x, y, "🤧")
-						else
-							this.emojiGrid.set(x, y, "🤒")
-
-						return 1
-					} else {
-						this.productionThisStep += 10
-						if (Math.random() > 1 - (0.17*sickCount)) {
-							this.sickGrid.set(x, y, this.stepCount)
-							this.emojiGrid.set(x, y, "🤒")
-							return 1
-						}
-				
-						this.emojiGrid.set(x, y, "🙂")
-						return 0
-					}
-					return currentValue
-				}
-
-				
-				case "mask": {
-					if (currentValue === 1) {
-						this.productionThisStep += 1
-						if (this.stepCount >= this.sickGrid.get(x, y) + 14) {
-							this.emojiGrid.set(x, y, "😷")
-							return 0
-						}
-
-						if (Math.random() > 0.5)
-							this.emojiGrid.set(x, y, "🤧")
-						else
-							this.emojiGrid.set(x, y, "🤒")
-
-						return 1
-					} else {
-						this.productionThisStep += 10
-						if (Math.random() > 1 - (0.08*sickCount)) {
-							this.sickGrid.set(x, y, this.stepCount)
-							this.emojiGrid.set(x, y, "🤒")
-							return 1
-						}
-				
-						this.emojiGrid.set(x, y, "😷")
-						return 0
-					}
-					return currentValue
-				}
-
-				case "productivityNoMask": {
 					if (currentValue === 1) {
 						this.productionThisStep += 5
 						if (this.stepCount >= this.sickGrid.get(x, y) + 5) {
@@ -182,7 +113,7 @@ class Simulation {
 					return currentValue
 				}
 
-				case "productivityMask": {
+				case "mask": {
 					if (currentValue === 1) {
 						this.productionThisStep += 5
 						if (this.stepCount >= this.sickGrid.get(x, y) + 5) {
@@ -198,7 +129,7 @@ class Simulation {
 						return 1
 					} else {
 						this.productionThisStep += 10
-						if (Math.random() > 0.98 - (0.06*sickCount)) {
+						if (Math.random() > 0.97 - (0.07*sickCount)) {
 							this.sickGrid.set(x, y, this.stepCount)
 							this.emojiGrid.set(x, y, "🤒")
 							return 1
@@ -210,8 +141,9 @@ class Simulation {
 					return currentValue
 				}
 
-				case "productivityWFH": {
+				case "WFH": {
 					if (currentValue === 1) {
+						this.productionThisStep += 1
 						let em = this.emojiGrid.get(x, y)
 						this.productionThisStep += em == "🤧" ? 5 : 0
 						if (this.stepCount >= this.sickGrid.get(x, y) + 1) {
@@ -296,27 +228,4 @@ class Simulation {
 	click(x, y) {
 		this.gameOfLifeGrid.set(x, y, 1)
 	}
-
-
-
-	//=====================================================
-	// Utility functions
-
-	
-	getNeighborPositions(x1, y1, wrap) {
-		let x0 = x1 - 1
-		let x2 = x1 + 1
-		let y0 = y1 - 1
-		let y2 = y1 + 1
-		if (wrap)  {
-			x0 = (x0 + this.w)%this.w
-			x2 = (x2 + this.w)%this.w
-			y0 = (y0 + this.h)%this.h
-			y2 = (y2 + this.h)%this.h
-		}
-		
-		return [[x0,y0],[x1,y0],[x2,y0],[x2,y1],[x2,y2],[x1,y2],[x0,y2],[x0,y1]]
-	}
-
-
 }
