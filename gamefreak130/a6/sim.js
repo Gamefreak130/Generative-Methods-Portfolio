@@ -78,16 +78,21 @@ class Simulation {
 
 			let sickCount  = 0
 			for (const em of [e0, e1, e2, e3]) {
+				// Sneezing spreads germs!
 				if (em === "🤧")
 					sickCount += 1
+				// Not sneezing spreads less germs!
 				else if (em === "🤒")
 					sickCount += 1/10
 			}
 			
 			switch (this.mode) {
 				case "noMask": {
+					// 1 is sick, 0 is healthy
 					if (currentValue === 1) {
+						// Less productive when sick
 						this.productionThisStep += 5
+						// Being sick lasts for 5 days
 						if (this.stepCount >= this.sickGrid.get(x, y) + 5) {
 							this.emojiGrid.set(x, y, "🙂")
 							return 0
@@ -101,7 +106,11 @@ class Simulation {
 						return 1
 					} else {
 						this.productionThisStep += 10
+						// 5% chance to just randomly get sick
+						// Chance increases based on nearby sneezing/sick people
 						if (Math.random() > 0.95 - (0.1*sickCount)) {
+							// Set the current step at which we got sick
+							// So we know how long before we're healthy again
 							this.sickGrid.set(x, y, this.stepCount)
 							this.emojiGrid.set(x, y, "🤒")
 							return 1
@@ -129,6 +138,7 @@ class Simulation {
 						return 1
 					} else {
 						this.productionThisStep += 10
+						// Masks reduce chance of sickness!
 						if (Math.random() > 0.97 - (0.07*sickCount)) {
 							this.sickGrid.set(x, y, this.stepCount)
 							this.emojiGrid.set(x, y, "🤒")
@@ -143,9 +153,12 @@ class Simulation {
 
 				case "WFH": {
 					if (currentValue === 1) {
-						this.productionThisStep += 1
 						let em = this.emojiGrid.get(x, y)
-						this.productionThisStep += em == "🤧" ? 5 : 0
+						// Being sick halves production
+						// Working from home cuts production by 90%
+						this.productionThisStep += em == "🤧" ? 5 : 1
+						// Once we realize we're sick (after one step of being sick in-office)
+						// We leave to work from home
 						if (this.stepCount >= this.sickGrid.get(x, y) + 1) {
 							this.emojiGrid.set(x, y, "")
 							return 0
@@ -159,6 +172,7 @@ class Simulation {
 						return 1
 					} else {
 						this.productionThisStep += 10
+						// No masks!
 						if (Math.random() > 0.95 - (0.1*sickCount)) {
 							this.sickGrid.set(x, y, this.stepCount)
 							this.emojiGrid.set(x, y, "🤧")
