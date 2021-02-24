@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function(){
 			<p>
 				Say we have an office full of 200 workers, all of whom are now once again free to work in close proximity to each other without masks. 
 				A healthy worker contributes 10 productivity points to the company per day, meaning a maximum possible 2000 productivity points per day across all workers.
-				The only threat to productivity is the common cold, which halves a given worker's productivity, but is far less contagious for a far shorter length of time (specifically, about 5 days).
+				The only threat to productivity are minor diseases like the common cold, which halve a given worker's productivity, but are only contagious for about 5 days.
 				Many people in the "Before Times" would be tempted -- or perhaps even required -- to go to work in spite of these minor illnesses. What happens in the office when they do?
 			</p>
 
@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", function(){
 				Well, we're not in a position to hire more workers, and we can't force our employees to work longer hours. How else can we maximize our production?
 				What if everyone wears masks when they're feeling ill? Since most face coverings aren't really designed to protect you as much as they are to protect those around you, those who aren't sick don't have to wear them.
 			</p>
-			<p>Let's make a conservative assumption and say that this is, on average, about 33% effective at preventing infection. How does the office look now?</p>
+			<p>Let's make a very conservative assumption and say that this is, on average, about 33% effective at preventing infection. How does the office look now?</p>
 
 			<p class="small">btw I know the sick workers aren't actually wearing masks and the healthy workers are...just pretend it's the other way around pls</p>
 
