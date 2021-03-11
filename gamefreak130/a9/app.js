@@ -28,7 +28,7 @@ let app = {
 
 	// Use static data
 	inputting: true,
-	inputVector: new Vector(0,0,0,0,0,0),
+	inputVector: undefined,
 	paused: false,
 	useHandsFree: false,
 	staticPlayback: false,
@@ -78,9 +78,14 @@ let app = {
 			app.buildArray(str);
 			document.getElementById("input-modal").hidden = true;
 			app.inputting = false;
+			words = str.split(" ");
+			// Remove duplicates from array
+			words = [...new Set(words)];
+			for (label of document.querySelectorAll("td.label")) {
+				label.innerText = words[Math.floor(Math.random()*words.length)];
+			}
 			switch (app.inputVector.coords[0]) {
 				case 0:
-					console.log(app.inputVector.coords[4] / 19.0);
 					SLIDER.voronoiLerp = (app.inputVector.coords[4] / 19.0) % 1 + 0.05;
 					app.setMask("voronoiMask");
 					break;
@@ -101,7 +106,7 @@ let app = {
 	},
 
 	buildArray(str) {
-		app.inputVector = new Vector(0,0,0,0,0,0);
+		app.inputVector = new Vector.empty(6);
 		for (i = 0; i < str.length; i++) {
 			switch (i % 6) {
 				case 0:
