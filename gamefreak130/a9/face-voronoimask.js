@@ -70,14 +70,14 @@ class VoronoiMask {
 			if (centerIndex%1 == 0) {
 				let pt = this.voronoiPoints[centerIndex]
 				p.noStroke()
-				p.fill(centerIndex%360, 100, 50, .4)
+				p.fill((app.inputVector.coords[1] + centerIndex)%360, app.inputVector.coords[2]*5 % 100, app.inputVector.coords[3]*5 % 80, .4)
 				// pt.draw(p, 1)
 				p.beginShape()
 				// verts.forEach(vert => p.vertex(...vert))
 				verts.forEach(vert => Vector.lerpVertex(p, pt, vert, vpct))
 				p.endShape(p.CLOSE)
 
-				p.fill((centerIndex + 50)%360, 100, 50, .4)
+				p.fill((app.inputVector.coords[1] + centerIndex + 50)%360, app.inputVector.coords[2]*5 % 100, app.inputVector.coords[3]*5 % 80, .4)
 				p.beginShape()
 				// verts.forEach(vert => p.vertex(...vert))
 				verts.forEach(vert => Vector.lerpVertex(p, pt, vert, vpct-.2))

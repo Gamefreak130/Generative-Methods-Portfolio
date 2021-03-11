@@ -27,6 +27,8 @@ let app = {
 	startMask: "voronoiMask",
 
 	// Use static data
+	inputting: true,
+	inputVector: new Vector(0,0,0,0,0,0),
 	paused: false,
 	useHandsFree: false,
 	staticPlayback: false,
@@ -75,62 +77,95 @@ let app = {
 		if (str !== "") {
 			app.buildArray(str);
 			document.getElementById("input-modal").hidden = true;
+			app.inputting = false;
+			switch (app.inputVector.coords[0]) {
+				case 0:
+					console.log(app.inputVector.coords[4] / 19.0);
+					SLIDER.voronoiLerp = (app.inputVector.coords[4] / 19.0) % 1 + 0.05;
+					app.setMask("voronoiMask");
+					break;
+				case 1:
+					app.setMask("rainbar");
+					break;
+				case 2:
+					app.setMask("angelFace");
+					break;
+			}
 		}
 	},
 
 	getInput() {
 		document.getElementById("emotionInput").value = "";
 		document.getElementById("input-modal").hidden = false;
+		app.inputting = true;
 	},
 
 	buildArray(str) {
-		// for now, just building a sum
-		// TODO actually make an array from this
-		let sum = 0;
+		app.inputVector = new Vector(0,0,0,0,0,0);
 		for (i = 0; i < str.length; i++) {
-			sum += str.charCodeAt(i)
+			switch (i % 6) {
+				case 0:
+					//app.inputVector.coords[0] = (app.inputVector.coords[0] + str.charCodeAt(i)) % 3;
+					break;
+				case 1:
+					app.inputVector.coords[1] = (app.inputVector.coords[1] + str.charCodeAt(i));
+					break;
+				case 2:
+					app.inputVector.coords[2] = (app.inputVector.coords[2] + str.charCodeAt(i));
+					break;
+				case 3:
+					app.inputVector.coords[3] = (app.inputVector.coords[3] + str.charCodeAt(i));
+					break;
+				case 4:
+					app.inputVector.coords[4] = (app.inputVector.coords[4] + str.charCodeAt(i));
+					break;
+				case 5:
+					break;
+			}
 		}
-		console.log(sum);
+		
 	},
 
 	draw(p, t) {
-		let frameCount = p.frameCount
-		// console.log(frameCount)
-		let dt = p.deltaTime*.001
+		if (!app.inputting) {
+			let frameCount = p.frameCount
+			// console.log(frameCount)
+			let dt = p.deltaTime*.001
 
-		// function drawPts(pts) {
-		// 	p.textSize(.5)
-		// 	
-		// }
-		
+			// function drawPts(pts) {
+			// 	p.textSize(.5)
+			// 	
+			// }
+			
 
-		p.push()
-		p.translate(p.width/2, p.height/2)
-		
-		let relOffset = Vector.add(offset, app.mouse.dragOffset)
-		relOffset.mult(-1)
-		p.translate(...relOffset.coords)
-		
-		app.zoom = (SLIDER.zoom*8)**1.5 + 1
-		p.scale(app.zoom, app.zoom)
+			p.push()
+			p.translate(p.width/2, p.height/2)
+			
+			let relOffset = Vector.add(offset, app.mouse.dragOffset)
+			relOffset.mult(-1)
+			p.translate(...relOffset.coords)
+			
+			app.zoom = (SLIDER.zoom*8)**1.5 + 1
+			p.scale(app.zoom, app.zoom)
 
 		
 		
-		if (app.maskFxn) {
-			app.maskFxn(p, t)
-		}
+			if (app.maskFxn) {
+				app.maskFxn(p, t)
+			}
 
-		if (app.maskInstance) {
-			app.maskInstance.update(t, dt, frameCount)	
-			app.maskInstance.draw(p, t)	
-		}
-		// drawAngelFace(p, t)
+			if (app.maskInstance) {
+				app.maskInstance.update(t, dt, frameCount)	
+				app.maskInstance.draw(p, t)	
+			}
+			// drawAngelFace(p, t)
 	
 
 		
 
 	
-		// drawTestPoints(p)
+			// drawTestPoints(p)
+		}
 
 		
 
@@ -218,7 +253,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
 
 		mounted() {
-			/*app.p5 = new p5((p) => {
+			app.p5 = new p5((p) => {
 				// Save the noise fxn
 				noise = p.noise
 				// Save a mouse position
@@ -297,7 +332,7 @@ document.addEventListener("DOMContentLoaded", function(){
 					
 				}
 
-			}, this.$refs.p5)*/
+			}, this.$refs.p5)
 
 
 			app.init()
@@ -343,24 +378,16 @@ function shuffleArray(array) {
     return array
 }
 
-
-document.addEventListener('keyup', function(e){
-	
-	console.log(e)
-	if (e.key === "Shift") {
-		// Clear all the shift-selected
-		app.shiftDown = false
-		// Vue.set(app, "shiftSelected", [])
-	}
-});  
-
 document.addEventListener('keydown', function(e){
-	if (e.key === "Shift") {
-		app.shiftDown = true
-		Vue.set(app, "shiftSelected", [])
+	if (app.inputting) {
+		if (e.code === "Enter") {
+			app.submitInput();
+		}
 	}
-	if (e.code === "Space") {
-		app.paused = !app.paused
-		console.log("paused", app.paused)
+	else {
+		if (e.code === "Space") {
+			app.paused = !app.paused
+			console.log("paused", app.paused)
+		}
 	}
 });
