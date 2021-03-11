@@ -70,6 +70,28 @@ let app = {
 		// document.getElementById('image').appendChild(app.image);
 	},
 
+	submitInput() {
+		str = document.getElementById("emotionInput").value;
+		if (str !== "") {
+			app.buildArray(str);
+			document.getElementById("input-modal").hidden = true;
+		}
+	},
+
+	getInput() {
+		document.getElementById("emotionInput").value = "";
+		document.getElementById("input-modal").hidden = false;
+	},
+
+	buildArray(str) {
+		// for now, just building a sum
+		// TODO actually make an array from this
+		let sum = 0;
+		for (i = 0; i < str.length; i++) {
+			sum += str.charCodeAt(i)
+		}
+		console.log(sum);
+	},
 
 	draw(p, t) {
 		let frameCount = p.frameCount
@@ -142,6 +164,7 @@ document.addEventListener("DOMContentLoaded", function(){
 			<button @click="app.recording=!app.recording" :class="{toggled:app.recording}">record</button>
 			<button @click="saveData()">copy</button>
 			<button @click="saveHandData()">copy hands</button>
+			<button @click="app.getInput()">New Mask</button>
 			</div>
 			<table>	
 				<tr v-for="(value,label in sliders">
@@ -195,7 +218,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
 
 		mounted() {
-			app.p5 = new p5((p) => {
+			/*app.p5 = new p5((p) => {
 				// Save the noise fxn
 				noise = p.noise
 				// Save a mouse position
@@ -274,7 +297,7 @@ document.addEventListener("DOMContentLoaded", function(){
 					
 				}
 
-			}, this.$refs.p5)
+			}, this.$refs.p5)*/
 
 
 			app.init()
