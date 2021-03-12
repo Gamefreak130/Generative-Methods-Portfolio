@@ -1,4 +1,22 @@
+class WordParticle {
+	constructor(point, word) {
+		this.pt = point;
+		this.word = word;
+	}
 
+	draw(p) {
+		p.fill(this.pt.color);
+		p.textFont("cursive");
+		p.textSize(24);
+		p.textStyle(p.BOLD);
+		p.text(this.word, ...this.pt.coords);
+	}
+
+	update(t, dt, frameCount) {
+		this.pt.addMultiples(this.pt.velocity, dt)
+		this.pt.setToLerp(this.pt, this.pt.attachPoint, .1)
+	}
+}
 
 class VoronoiMask {
 	constructor() {
@@ -13,9 +31,10 @@ class VoronoiMask {
 				pt.idNumber = j*5 + i
 				pt.velocity =  new Vector()
 				pt.force =  new Vector()
-				pt.color = [Math.random()*360, 100, 50]
+				pt.color = [(app.inputVector.coords[1]*10 + pt.idNumber*(app.inputVector.coords[1]%20))%360, 100, 50]
 				pt.attachPoint = hand[j].fingers[i][3]
-				this.particles.push(pt)
+				let particle = new WordParticle(pt, "TEST")
+				this.particles.push(particle)
 			}
 		}
 
@@ -28,12 +47,12 @@ class VoronoiMask {
 			ringPoints.push(Vector.polar(400 + (i%2)*20, theta))
 		}
 		this.voronoiPoints = face.points.concat(ringPoints).concat(hand[0].points).concat(hand[1].points)
-		
+		console.log((app.inputVector.coords[0]/5)%1 + 0.2)
 		
 	}
 
 	draw(p) {
-		p.background(100, 100, 100)
+		p.background(100, 100, 100, (app.inputVector.coords[0]/5)%1 + 0.2)
 		p.stroke(0)
 		p.noFill(0)
 		p.circle(0, 0, 300)
@@ -43,9 +62,8 @@ class VoronoiMask {
 		// drawTestFacePoints(p)
 		// drawTestHandPoints(p)
 
-		this.particles.forEach(pt => {
-			p.fill(pt.color)
-			pt.draw(p, pt.radius)
+		this.particles.forEach(particle => {
+			particle.draw(p)
 		})
 
 		// p.fill(0)
@@ -93,9 +111,8 @@ class VoronoiMask {
 
 	update(t, dt, frameCount) {
 		console.log("update")
-		this.particles.forEach(pt => {
-			pt.addMultiples(pt.velocity, dt)
-			pt.setToLerp(pt, pt.attachPoint, .1)
+		this.particles.forEach(particle => {
+			particle.update(t, dt, frameCount)
 		})
 	}
 }
