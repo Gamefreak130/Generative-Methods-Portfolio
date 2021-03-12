@@ -84,10 +84,14 @@ let app = {
 			// Remove duplicates from array
 			words = [...new Set(words)];
 			for (label of document.querySelectorAll("td.label")) {
-				label.innerText = words[Math.floor(Math.random()*words.length)];
+				let i = Math.floor(Math.random()*words.length);
+				label.innerText = words[i];
+				if (words.length > 3) {
+					words.splice(i, 1);
+				}
 			}
 			SLIDER.voronoiLerp = (app.inputVector.coords[4] / 19.0) % 1 + 0.05;
-			tracery.setRng(new Math.seedrandom(app.inputVector.coords[5]*9))
+			tracery.setRng(new Math.seedrandom(app.inputVector.coords[5]*8))
 			app.setMask("voronoiMask");
 		}
 	},
