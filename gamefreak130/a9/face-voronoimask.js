@@ -1,3 +1,5 @@
+const grammar = tracery.createGrammar(moodGrammar)
+
 class WordParticle {
 	constructor(point, word) {
 		this.pt = point;
@@ -33,7 +35,7 @@ class VoronoiMask {
 				pt.force =  new Vector()
 				pt.color = [(app.inputVector.coords[1]*10 + pt.idNumber*(app.inputVector.coords[1]%20))%360, 100, 50]
 				pt.attachPoint = hand[j].fingers[i][3]
-				let particle = new WordParticle(pt, "TEST")
+				let particle = new WordParticle(pt, grammar.flatten("#moods#"))
 				this.particles.push(particle)
 			}
 		}

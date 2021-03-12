@@ -87,6 +87,7 @@ let app = {
 				label.innerText = words[Math.floor(Math.random()*words.length)];
 			}
 			SLIDER.voronoiLerp = (app.inputVector.coords[4] / 19.0) % 1 + 0.05;
+			tracery.setRng(new Math.seedrandom(app.inputVector.coords[5]*9))
 			app.setMask("voronoiMask");
 		}
 	},
