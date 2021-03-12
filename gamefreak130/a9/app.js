@@ -15,16 +15,15 @@ let masks = {}
 let SLIDER = {
 	zoom: 0,
 	voronoiLerp: .9,
-	eyebrow: .5,
-	a: .5,
-	b: .5, 
-	c: .5
+	trails: 0,
+	hue: .5,
+	sat: .5,
+	light: .5, 
 }
 
 let app = {
 	zoom: 1,
 	smooth: 0,
-	startMask: "voronoiMask",
 
 	// Use static data
 	inputting: true,
@@ -90,10 +89,21 @@ let app = {
 					words.splice(i, 1);
 				}
 			}
-			SLIDER.voronoiLerp = (app.inputVector.coords[4] / 19.0) % 1 + 0.05;
-			tracery.setRng(new Math.seedrandom(app.inputVector.coords[5]*8))
-			app.setMask("voronoiMask");
+			app.startMask();
+			
 		}
+	},
+
+	startMask() {
+		// Plug in calculated array
+		SLIDER.trails = (app.inputVector.coords[0]/5)%1 + 0.2;
+		SLIDER.hue = app.inputVector.coords[1] % 360;
+		SLIDER.sat = (app.inputVector.coords[2]*5) % 100;
+		SLIDER.light = app.inputVector.coords[3]*5 % 80;
+		SLIDER.voronoiLerp = (app.inputVector.coords[4] / 19.0) % 1 + 0.05;
+		tracery.setRng(new Math.seedrandom(app.inputVector.coords[5]*8));
+
+		app.setMask("voronoiMask");
 	},
 
 	getInput() {
@@ -187,14 +197,47 @@ document.addEventListener("DOMContentLoaded", function(){
 			<button @click="app.getInput()">New Mask</button>
 			</div>
 			<table>	
-				<tr v-for="(value,label in sliders">
-
-					<td class="label">{{label}}</td>
+				<tr>
+					<td class="label"></td>
 					<td class="slider-cell">
-						<div class="slider-val">{{sliders[label]}}</div>
-						<input type="range" min="0" max="1" :step=".001" class="slider" v-model="sliders[label]"  />
+						<div class="slider-val">{{sliders['zoom']}}</div>
+						<input type="range" min="0" max="1" :step=".001" class="slider" v-model="sliders['zoom']"  />
 					</td>
-
+				</tr>
+				<tr>
+					<td class="label"></td>
+					<td class="slider-cell">
+						<div class="slider-val">{{sliders['voronoiLerp']}}</div>
+						<input type="range" min="0" max="1" :step=".001" class="slider" v-model="sliders['voronoiLerp']"  />
+					</td>
+				</tr>
+				<tr>
+					<td class="label"></td>
+					<td class="slider-cell">
+						<div class="slider-val">{{sliders['trails']}}</div>
+						<input type="range" min="0.2" max="1" :step=".001" class="slider" v-model="sliders['trails']"  />
+					</td>
+				</tr>
+				<tr>
+					<td class="label"></td>
+					<td class="slider-cell">
+						<div class="slider-val">{{sliders['hue']}}</div>
+						<input type="range" min="0" max="359" :step="1" class="slider" v-model="sliders['hue']"  />
+					</td>
+				</tr>
+				<tr>
+					<td class="label"></td>
+					<td class="slider-cell">
+						<div class="slider-val">{{sliders['sat']}}</div>
+						<input type="range" min="0" max="100" :step="1" class="slider" v-model="sliders['sat']"  />
+					</td>
+				</tr>
+				<tr>
+					<td class="label"></td>
+					<td class="slider-cell">
+						<div class="slider-val">{{sliders['light']}}</div>
+						<input type="range" min="0" max="100" :step="1" class="slider" v-model="sliders['light']"  />
+					</td>
 				</tr>
 			</table>
 			

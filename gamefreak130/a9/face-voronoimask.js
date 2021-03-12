@@ -49,12 +49,11 @@ class VoronoiMask {
 			ringPoints.push(Vector.polar(400 + (i%2)*20, theta))
 		}
 		this.voronoiPoints = face.points.concat(ringPoints).concat(hand[0].points).concat(hand[1].points)
-		console.log((app.inputVector.coords[0]/5)%1 + 0.2)
 		
 	}
 
 	draw(p) {
-		p.background(100, 100, 100, (app.inputVector.coords[0]/5)%1 + 0.2)
+		p.background(100, 100, 100, SLIDER.trails)
 		p.stroke(0)
 		p.noFill(0)
 		p.circle(0, 0, 300)
@@ -90,14 +89,14 @@ class VoronoiMask {
 			if (centerIndex%1 == 0) {
 				let pt = this.voronoiPoints[centerIndex]
 				p.noStroke()
-				p.fill((app.inputVector.coords[1] + centerIndex)%360, app.inputVector.coords[2]*5 % 100, app.inputVector.coords[3]*5 % 80, .4)
+				p.fill((SLIDER.hue + centerIndex)%360, SLIDER.sat, SLIDER.light, .4)
 				// pt.draw(p, 1)
 				p.beginShape()
 				// verts.forEach(vert => p.vertex(...vert))
 				verts.forEach(vert => Vector.lerpVertex(p, pt, vert, vpct))
 				p.endShape(p.CLOSE)
 
-				p.fill((app.inputVector.coords[1] + centerIndex + 50)%360, app.inputVector.coords[2]*5 % 100, app.inputVector.coords[3]*5 % 80, .4)
+				p.fill((SLIDER.hue + centerIndex + 50)%360, SLIDER.sat, SLIDER.light, .4)
 				p.beginShape()
 				// verts.forEach(vert => p.vertex(...vert))
 				verts.forEach(vert => Vector.lerpVertex(p, pt, vert, vpct-.2))
