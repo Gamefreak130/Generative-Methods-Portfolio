@@ -122,7 +122,7 @@ button.toggled {
 }
 
 .handsfree-debugger {
-	top: 200px;
+	top: 0;
 	position: absolute;
 	width:240px;
 }

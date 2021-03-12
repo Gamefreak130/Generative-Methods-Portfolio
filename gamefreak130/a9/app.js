@@ -29,7 +29,7 @@ let app = {
 	inputting: true,
 	inputVector: undefined,
 	paused: false,
-	useHandsFree: false,
+	useHandsFree: true,
 	staticPlayback: false,
 	recording: false,
 	recordingData: {hand:[],face:[]},
