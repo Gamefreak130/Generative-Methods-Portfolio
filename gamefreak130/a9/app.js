@@ -111,6 +111,7 @@ let app = {
 		document.getElementById("input-modal").hidden = false;
 		document.getElementById("emotionInput").focus();
 		app.inputting = true;
+		app.setMask(0);
 	},
 
 	buildArray(str) {
@@ -182,19 +183,21 @@ document.addEventListener("DOMContentLoaded", function(){
 	new Vue({
 		el : "#controls",
 		template: `
-		<div id="controls">
+		<div id="controls" class="row">
 
 			<!--<select @change="setMask" val="app.startMask">	
 				<option v-for="id in Object.keys(masks)" >{{id}}</option>
 			</select>-->
+			<p>
 			recording:
 			{{app.recordingData.face.length}}
+			</p>
 			
-			<div>
-			<button @click="app.recording=!app.recording" :class="{toggled:app.recording}">record</button>
-			<button @click="saveData()">copy</button>
-			<button @click="saveHandData()">copy hands</button>
-			<button @click="app.getInput()">New Mask</button>
+			<div class="btn-group" role="group" aria-label="Controls">
+				<button class="btn btn-outline-secondary" @click="app.recording=!app.recording" :class="{toggled:app.recording}">record</button>
+				<button class="btn btn-outline-secondary" @click="saveData()">copy</button>
+				<button class="btn btn-outline-secondary" @click="saveHandData()">copy hands</button>
+				<button class="btn btn-outline-secondary" @click="app.getInput()">New Mask</button>
 			</div>
 			<table>	
 				<tr>
@@ -301,7 +304,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
 				// Utility fxn to test if mouse in p5
 				function mouseInP5() {
-					return p.mouseX > 0 && p.mouseX < canvasW && p.mouseY > 0 && p.mouseY < canvasH
+					return !app.inputting && p.mouseX > 0 && p.mouseX < canvasW && p.mouseY > 0 && p.mouseY < canvasH
 				}
 
 				p.mousePressed = () => {
