@@ -66,7 +66,9 @@ let app = {
 			initTestData()
 		}
 
-		app.setMask(app.startMask)
+		document.getElementById("emotionInput").focus();
+
+		//app.setMask(app.startMask)
 
 		// initVideo()
 		// document.getElementById('image').appendChild(app.image);
@@ -84,49 +86,22 @@ let app = {
 			for (label of document.querySelectorAll("td.label")) {
 				label.innerText = words[Math.floor(Math.random()*words.length)];
 			}
-			switch (app.inputVector.coords[0]) {
-				case 0:
-					SLIDER.voronoiLerp = (app.inputVector.coords[4] / 19.0) % 1 + 0.05;
-					app.setMask("voronoiMask");
-					break;
-				case 1:
-					app.setMask("rainbar");
-					break;
-				case 2:
-					app.setMask("angelFace");
-					break;
-			}
+			SLIDER.voronoiLerp = (app.inputVector.coords[4] / 19.0) % 1 + 0.05;
+			app.setMask("voronoiMask");
 		}
 	},
 
 	getInput() {
 		document.getElementById("emotionInput").value = "";
 		document.getElementById("input-modal").hidden = false;
+		document.getElementById("emotionInput").focus();
 		app.inputting = true;
 	},
 
 	buildArray(str) {
 		app.inputVector = new Vector.empty(6);
 		for (i = 0; i < str.length; i++) {
-			switch (i % 6) {
-				case 0:
-					//app.inputVector.coords[0] = (app.inputVector.coords[0] + str.charCodeAt(i)) % 3;
-					break;
-				case 1:
-					app.inputVector.coords[1] = (app.inputVector.coords[1] + str.charCodeAt(i));
-					break;
-				case 2:
-					app.inputVector.coords[2] = (app.inputVector.coords[2] + str.charCodeAt(i));
-					break;
-				case 3:
-					app.inputVector.coords[3] = (app.inputVector.coords[3] + str.charCodeAt(i));
-					break;
-				case 4:
-					app.inputVector.coords[4] = (app.inputVector.coords[4] + str.charCodeAt(i));
-					break;
-				case 5:
-					break;
-			}
+			app.inputVector.coords[i % 6] = (app.inputVector.coords[i % 6] + str.charCodeAt(i));
 		}
 		
 	},
@@ -194,9 +169,9 @@ document.addEventListener("DOMContentLoaded", function(){
 		template: `
 		<div id="controls">
 
-			<select @change="setMask" val="app.startMask">	
+			<!--<select @change="setMask" val="app.startMask">	
 				<option v-for="id in Object.keys(masks)" >{{id}}</option>
-			</select>
+			</select>-->
 			recording:
 			{{app.recordingData.face.length}}
 			
