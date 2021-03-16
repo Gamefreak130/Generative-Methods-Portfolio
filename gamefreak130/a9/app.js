@@ -178,14 +178,14 @@ document.addEventListener("DOMContentLoaded", function(){
 				<option v-for="id in Object.keys(masks)" >{{id}}</option>
 			</select>-->
 			<p>
-			recording:
+			Recording:
 			{{app.recordingData.face.length}}
 			</p>
 			
 			<div class="btn-group" role="group" aria-label="Controls">
-				<button class="btn btn-outline-secondary" @click="app.recording=!app.recording" :class="{toggled:app.recording}">record</button>
-				<button class="btn btn-outline-secondary" @click="saveData()">copy</button>
-				<button class="btn btn-outline-secondary" @click="saveHandData()">copy hands</button>
+				<button class="btn btn-outline-secondary" @click="app.recording=!app.recording" :class="{toggled:app.recording}">Record</button>
+				<button class="btn btn-outline-secondary" @click="saveData()">Copy</button>
+				<button class="btn btn-outline-secondary" @click="saveHandData()">Copy Hands</button>
 				<button class="btn btn-outline-secondary" @click="app.getInput()">New Mask</button>
 			</div>
 			<table>	
