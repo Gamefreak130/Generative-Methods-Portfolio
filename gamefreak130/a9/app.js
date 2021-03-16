@@ -127,11 +127,6 @@ let app = {
 			let frameCount = p.frameCount
 			// console.log(frameCount)
 			let dt = p.deltaTime*.001
-
-			// function drawPts(pts) {
-			// 	p.textSize(.5)
-			// 	
-			// }
 			
 
 			p.push()
@@ -154,12 +149,6 @@ let app = {
 				app.maskInstance.update(t, dt, frameCount)	
 				app.maskInstance.draw(p, t)	
 			}
-			// drawAngelFace(p, t)
-	
-
-		
-
-	
 			// drawTestPoints(p)
 		}
 
