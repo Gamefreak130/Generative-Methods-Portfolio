@@ -54,9 +54,6 @@ class VoronoiMask {
 
 	draw(p) {
 		p.background(100, 100, 100, SLIDER.trails)
-		p.stroke(0)
-		p.noFill(0)
-		p.circle(0, 0, 300)
 
 		p.fill(0)
 		p.noStroke()
