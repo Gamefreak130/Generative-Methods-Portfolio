@@ -131,7 +131,7 @@ Vue.component("aof-sliders", {
 
 			</tr>
 		</table>
-		<input style="width:97%" v-model="aofinput" @keyup.enter='setFromInput'>
+		<input readonly style="width:97%" v-model="aofinput" @keyup.enter='setFromInput'>
 	</div>`,
 
 	computed: {

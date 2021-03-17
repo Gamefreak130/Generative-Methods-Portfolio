@@ -5,7 +5,6 @@ let SLIDERS = {}
 
 document.addEventListener('keyup', function(e){
 	
-	console.log(e)
 	if (e.key === "Shift") {
 		// Clear all the shift-selected
 		app.shiftDown = false
@@ -23,14 +22,14 @@ document.addEventListener('keydown', function(e){
 
 // Moving noise into the global scope so its not attached to P5
 let noise = () => {}
-const canvasW = 600
-const canvasH = 400
-const dimensions = 10
+const canvasW = 800
+const canvasH = 500
+//const dimensions = 10
 
 
 let app = {
 
-	mutation: .4,
+	mutation: .3,
 
 	// Toggles
 	soundMode: true,
@@ -43,19 +42,17 @@ let app = {
 	// Selected individuals
 	hovered: undefined,
 	selected: undefined,
-	shiftSelected: [],
 
 	audio: new AudioPlayer(),
 
 	// All current individuals
 	individuals: [],
 
-	classes: [Face,LTree],
 	currentClass: LTree,
-	xaxis: Fish.labels[0],
-	yaxis: Fish.labels[1],
+	xaxis: LTree.labels[0],
+	yaxis: LTree.labels[1],
 
-	popCount: 1,
+	popCount: 5,
 	
 	// Create a bunch of individuals
 	populate() {
@@ -83,9 +80,8 @@ let app = {
 			// Get the pct of this one for doing layout
 			let pct = app.popCount==1?.5:i/(app.popCount - 1)
 			let x = canvasW*.5 + (canvasW - 100)*.9*(pct - .5)
-			let y = canvasH*(.8 + .1*(i%2))
 			individual.center.coords[0] = x
-			individual.center.coords[1] = y
+			individual.center.coords[1] = 300
 
 			// Save to an array
 			app.individuals.push(individual)
@@ -133,10 +129,6 @@ let app = {
 				p.stroke(100, 100, 100, 1)
 				p.strokeWeight(20)
 			}
-			if (app.shiftSelected.includes(individual)) {
-				p.stroke(100, 100, 80, 1)
-				p.strokeWeight(20)
-			}
 
 			p.fill(...individual.aof.idColor, .4)
 			p.ellipse(0, 0, 50, 30)
@@ -176,16 +168,8 @@ document.addEventListener("DOMContentLoaded", function(){
 		
 			</div>
 
-			<div>
-				Pop:<select v-model="app.popCount" @change="reroll">
-					<option>1</option><option>3</option><option>7</option><option>15</option>
-				</select>
-				<button class="emoji-button" @click="reroll">🎲</button>
-			</div>
-
 
 			<aof-sliders :aof="aof" v-if="aof"/>
-			<div>Parents:{{app.shiftSelected.map(s => s.aof.idNumber)}}</div>
 
 			<audio-player :audio="app.audio" />
 			<div>
@@ -195,7 +179,6 @@ document.addEventListener("DOMContentLoaded", function(){
 			<div>
 
 				<button class="emoji-button" @click="app.showGraph=!app.showGraph" :class="{toggled:app.showGraph}">📈</button>
-				<button class="emoji-button" @click="app.showLedger=!app.showLedger" :class="{toggled:app.showLedger}">📒</button>
 			</div>
 			
 		</div>`, 
@@ -298,17 +281,6 @@ document.addEventListener("DOMContentLoaded", function(){
 						if (!app.shiftDown){
 							Vue.set(app, "selected" , current)
 						}
-						else {
-
-							if (app.hovered) {
-								if (app.shiftSelected.includes(current)) {
-									app.shiftSelected.splice(app.shiftSelected.indexOf(current), 1)
-								}
-
-								else
-									app.shiftSelected.push(current)
-							}
-						}
 					}
 				}
 				//-------------------------------------------
@@ -331,13 +303,25 @@ document.addEventListener("DOMContentLoaded", function(){
 					// DRAWING
 					
 					p.background(190, 80, 90)
+
+					// Draw static road and sidewalk
+					p.fill(0, 0, 20)
+					p.rect(0, 420, 800, 80)
+					let numSquares = 10
+					let squareWidth = canvasW/numSquares
+					for (i = 0; i < numSquares; i++) {
+						p.fill(0, 0, 50)
+						p.rect(i*squareWidth, 380, squareWidth, 40)
+						p.fill(57, 100, 50)
+						p.rect(i*squareWidth + (squareWidth/5), 460, 3*squareWidth/5, 10)
+					}
 					
 					// Deal with sound things
-					if (app.audio.soundbar && app.soundMode) {
+					/*if (app.audio.soundbar && app.soundMode) {
 
 						app.audio.soundbar.update(t, dt, frameCount)
 						app.audio.soundbar.draw(p)
-					}
+					}*/
 
 					app.draw(p)
 

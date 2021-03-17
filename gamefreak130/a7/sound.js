@@ -17,7 +17,7 @@ Vue.component("audio-player", {
 			</div>
 			<button @click="audio.play()">▶️</button>
 			💿:{{audio.isInitialized}}
-			<input type="range" min="0" max="1" :step=".001" class="slider" v-model="audio.volume" @change="ev => audio.setVolume()" />
+			<input type="range" min="0" max="1" :step=".001" class="slider" v-model="audio.volume" @change="ev => audio.setVolume(ev)" />
 				
 		</div>`,
 	watch: {
@@ -65,8 +65,10 @@ class AudioPlayer {
 		this.isInitialized = true
 	}
 
-	setVolume() {
+	setVolume(ev) {
+		this.volume = parseFloat(ev.target.value)
 		console.log("Volume:", this.volume)
+		this.dancer.setVolume(this.volume)
 	}
 
 	toggle() {
@@ -86,7 +88,7 @@ class AudioPlayer {
 
 		console.log("Play", this.song)
 		this.dancer.play()
-
+		this.dancer.setVolume(this.volume)
 	} 
 
 
