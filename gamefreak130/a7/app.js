@@ -1,4 +1,3 @@
-	
 let SLIDERS = {}
 
 
@@ -23,7 +22,7 @@ document.addEventListener('keydown', function(e){
 // Moving noise into the global scope so its not attached to P5
 let noise = () => {}
 const canvasW = 800
-const canvasH = 500
+const canvasH = 400
 //const dimensions = 10
 
 
@@ -48,9 +47,9 @@ let app = {
 	// All current individuals
 	individuals: [],
 
-	currentClass: LTree,
-	xaxis: LTree.labels[0],
-	yaxis: LTree.labels[1],
+	currentClass: Building,
+	xaxis: Building.labels[0],
+	yaxis: Building.labels[1],
 
 	popCount: 5,
 	
@@ -81,7 +80,7 @@ let app = {
 			let pct = app.popCount==1?.5:i/(app.popCount - 1)
 			let x = canvasW*.5 + (canvasW - 100)*.9*(pct - .5)
 			individual.center.coords[0] = x
-			individual.center.coords[1] = 300
+			individual.center.coords[1] = 280
 
 			// Save to an array
 			app.individuals.push(individual)
@@ -123,15 +122,15 @@ let app = {
 			p.fill(0)
 			if (app.hovered === individual) {
 				p.stroke(100, 100, 100, .3)
-				p.strokeWeight(20)
+				p.strokeWeight(10)
 			}
 			if (app.selected === individual) {
 				p.stroke(100, 100, 100, 1)
-				p.strokeWeight(20)
+				p.strokeWeight(10)
 			}
 
 			p.fill(...individual.aof.idColor, .4)
-			p.ellipse(0, 0, 50, 30)
+			p.ellipse(0, 0, 70, 20)
 
 
 			individual.draw(p)
@@ -165,7 +164,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
 			<div>
 				Mutation: <input type="range" min="0" max="1" :step=".001" class="slider" v-model="app.mutation" />
-		
+				<button class="emoji-button" @click="reroll">🎲</button>
 			</div>
 
 
@@ -190,8 +189,8 @@ document.addEventListener("DOMContentLoaded", function(){
 			},
 
 			reroll() {
+				app.selected = undefined
 				app.populate()
-
 			}
 		},
 		computed: {
@@ -263,9 +262,9 @@ document.addEventListener("DOMContentLoaded", function(){
 				p.doubleClicked = () => {
 					if (mouseInP5()) {
 						let current = app.hovered
-						
+
 						// Set the selected and second selected
-						if (!app.shiftDown){
+						if (current) {
 							Vue.set(app, "selected" , current)
 							app.populate()
 						}
@@ -274,13 +273,10 @@ document.addEventListener("DOMContentLoaded", function(){
 				}
 
 				p.mouseClicked = () => {
+					// Set the selected and second selected
 					if (mouseInP5()) {
 						let current = app.hovered
-						
-						// Set the selected and second selected
-						if (!app.shiftDown){
-							Vue.set(app, "selected" , current)
-						}
+						Vue.set(app, "selected" , current)
 					}
 				}
 				//-------------------------------------------
@@ -306,14 +302,14 @@ document.addEventListener("DOMContentLoaded", function(){
 
 					// Draw static road and sidewalk
 					p.fill(0, 0, 20)
-					p.rect(0, 420, 800, 80)
+					p.rect(0, 320, 800, 80)
 					let numSquares = 10
 					let squareWidth = canvasW/numSquares
 					for (i = 0; i < numSquares; i++) {
 						p.fill(0, 0, 50)
-						p.rect(i*squareWidth, 380, squareWidth, 40)
+						p.rect(i*squareWidth, 280, squareWidth, 40)
 						p.fill(57, 100, 50)
-						p.rect(i*squareWidth + (squareWidth/5), 460, 3*squareWidth/5, 10)
+						p.rect(i*squareWidth + (squareWidth/5), 360, 3*squareWidth/5, 10)
 					}
 					
 					// Deal with sound things

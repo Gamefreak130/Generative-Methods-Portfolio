@@ -71,10 +71,10 @@ h1,h2,h3 {
 
 
 #main-column {
-	position: absolute;
+	/*position: absolute;*/
 	
 	/*margin: 0px auto;*/
-	right: 0px;
+	/* right: 0px; */
 	border-radius: 15px;
 	background-color: white;
 	box-shadow: 0px 4px 5px rgba(0, 0, 0, .5);
@@ -105,9 +105,9 @@ h1,h2,h3 {
 }
 
 #controls {
-	position: absolute;
+	/*position: absolute;
 	left: 0px;
-	top: 0px;
+	top: 0px;*/
 	margin: 5px;
 	padding: 4px;
 

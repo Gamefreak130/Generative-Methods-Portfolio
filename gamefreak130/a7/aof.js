@@ -114,11 +114,7 @@ class AoF  {
 Vue.component("aof-sliders", {
 	template: `<div class="aof-sliders">
 		<div class="contrast title" :style="titleStyle">AOF:{{aof.idNumber}}</div>
-		<div class="ultradetail">{{aof.mode}}</div>
-		<div class="controks">
-			<button class="emoji-button" @click="aof.mode='none'">X</button>
-			<button class="emoji-button" @click="aof.mode='wander'">⇝</button>
-			<button class="emoji-button" @click="aof.mode='audio'">💿</button>
+		<div class="controls">
 			<button class="emoji-button" @click="aof.randomize()">🎲</button>
 		</div>
 		<table>
@@ -131,7 +127,7 @@ Vue.component("aof-sliders", {
 
 			</tr>
 		</table>
-		<input readonly style="width:97%" v-model="aofinput" @keyup.enter='setFromInput'>
+		<input style="width:97%" v-model="aofinput" @keyup.enter='setFromInput'>
 	</div>`,
 
 	computed: {
