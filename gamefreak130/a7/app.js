@@ -1,29 +1,9 @@
 let SLIDERS = {}
 
-
-
-document.addEventListener('keyup', function(e){
-	
-	if (e.key === "Shift") {
-		// Clear all the shift-selected
-		app.shiftDown = false
-		// Vue.set(app, "shiftSelected", [])
-	}
-});  
-
-document.addEventListener('keydown', function(e){
-	if (e.key === "Shift") {
-		app.shiftDown = true
-		Vue.set(app, "shiftSelected", [])
-	}
-});
-
-
 // Moving noise into the global scope so its not attached to P5
 let noise = () => {}
 const canvasW = 800
 const canvasH = 400
-//const dimensions = 10
 
 
 let app = {
@@ -31,12 +11,7 @@ let app = {
 	mutation: .3,
 
 	// Toggles
-	soundMode: true,
-	showLedger: true,
 	showGraph: false,
-
-	shiftDown: false,
-	paused: false,
 	
 	// Selected individuals
 	hovered: undefined,
@@ -152,32 +127,32 @@ document.addEventListener("DOMContentLoaded", function(){
 	new Vue({
 		el : "#controls",
 		template: `<div id="controls">
-			<div>
-				<select v-model="app.xaxis">
+			<div class="input-group">
+				<select class="form-select form-select-sm" v-model="app.xaxis">
 					<option v-for="label in app.currentClass.labels">{{label}}</option>
 				</select>
-				<select v-model="app.yaxis">
+				<select class="form-select form-select-sm" v-model="app.yaxis">
 					<option v-for="label in app.currentClass.labels">{{label}}</option>
 				</select>
-				<button class="emoji-button" @click="randomAxes">🎲</button>
+				<button class="btn btn-outline-secondary btn-sm" title="Reroll Graph Axes" @click="randomAxes">🎲</button>
 			</div>
 
 			<div>
 				Mutation: <input type="range" min="0" max="1" :step=".001" class="slider" v-model="app.mutation" />
-				<button class="emoji-button" @click="reroll">🎲</button>
+				<button class="btn btn-outline-secondary btn-sm" title="Reroll All" @click="reroll">🎲</button>
 			</div>
 
 
 			<aof-sliders :aof="aof" v-if="aof"/>
 
 			<audio-player :audio="app.audio" />
-			<div>
-				<div>Landmarks</div>
-				<button v-for="(landmarkAOF,landmarkName) in app.currentClass.landmarks" @click="app.loadByAOF(landmarkAOF, landmarkName)">{{landmarkName}}</button>
+			<p>Landmarks:</p>
+			<div class="btn-group">
+				<button class="btn btn-outline-secondary btn-sm" v-for="(landmarkAOF,landmarkName) in app.currentClass.landmarks" @click="app.loadByAOF(landmarkAOF, landmarkName)">{{landmarkName}}</button>
 			</div>
 			<div>
 
-				<button class="emoji-button" @click="app.showGraph=!app.showGraph" :class="{toggled:app.showGraph}">📈</button>
+				<button class="btn btn-outline-secondary" title="Toggle Graph" @click="app.showGraph=!app.showGraph" :class="{toggled:app.showGraph}">📈</button>
 			</div>
 			
 		</div>`, 
@@ -201,7 +176,6 @@ document.addEventListener("DOMContentLoaded", function(){
 		},
 		data() {
 			return {
-			
 				app: app,
 			}
 		}
@@ -212,7 +186,6 @@ document.addEventListener("DOMContentLoaded", function(){
 		el : "#app",
 		template: `<div id="app">
 			<div id="p5-holder" ref="p5"></div>
-
 		</div>`,
 
 

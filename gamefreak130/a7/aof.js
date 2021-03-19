@@ -115,7 +115,7 @@ Vue.component("aof-sliders", {
 	template: `<div class="aof-sliders">
 		<div class="contrast title" :style="titleStyle">AOF:{{aof.idNumber}}</div>
 		<div class="controls">
-			<button class="emoji-button" @click="aof.randomize()">🎲</button>
+			<button class="btn btn-outline-secondary btn-sm" title="Reroll Selected" @click="aof.randomize()">🎲</button>
 		</div>
 		<table>
 			<tr v-for="(value,valIndex in aof.values">
@@ -127,7 +127,7 @@ Vue.component("aof-sliders", {
 
 			</tr>
 		</table>
-		<input style="width:97%" v-model="aofinput" @keyup.enter='setFromInput'>
+		<input style="width:24.2%; font-size: .9rem;" v-model="aofinput" @keyup.enter='setFromInput'>
 	</div>`,
 
 	computed: {

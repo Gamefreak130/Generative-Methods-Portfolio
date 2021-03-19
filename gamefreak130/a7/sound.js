@@ -10,13 +10,13 @@ Vue.component("audio-player", {
 	template: `
 		<div>
 
-			<div>
-				<select v-model="audio.song">
+			<div class="input-group">
+				<select class="form-select form-select-sm" v-model="audio.song">
 					<option v-for="song in audio.songs">{{song}}</option>
 				</select>
 			</div>
-			<button @click="audio.play()">▶️</button>
-			💿:{{audio.isInitialized}}
+			<button class="btn btn-outline-secondary btn-sm" title="Play Music" @click="audio.play()">▶️</button>
+			💿: {{audio.isInitialized}}
 			<input type="range" min="0" max="1" :step=".001" class="slider" v-model="audio.volume" @change="ev => audio.setVolume(ev)" />
 				
 		</div>`,
@@ -53,7 +53,7 @@ class AudioPlayer {
 						"Juanitos - Exotica.mp3", "arsonist - Hot salsa trip.mp3"]
 		this.song = this.songs[0]
 
-		this.volume = .2
+		this.volume = .5
 	
 	}
 
